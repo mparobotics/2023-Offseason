@@ -5,6 +5,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.Module1;
+import frc.robot.Constants.Module2;
+import frc.robot.Constants.Module3;
+import frc.robot.Constants.Module4;
 
 /** Leo's swerve system */
 public class SwerveDriveBase {
@@ -28,13 +32,13 @@ public class SwerveDriveBase {
 
      */
     
-    public SwerveDriveBase(int dm1,int dm2,int dm3,int dm4,int tm1,int tm2,int tm3,int tm4){
+    public SwerveDriveBase(){
         //each module gets ids for a drive motor and turn motor, as well as coefficients for a PID controller.
-        //I think each module needs to be tuned independently from the others?
-        wheel1 = new SwerveModule(dm1, tm1, 0, 0, 0,0,0);
-        wheel2 = new SwerveModule(dm2, tm2, 0, 0, 0,0,0);
-        wheel3 = new SwerveModule(dm3, tm3, 0, 0, 0,0,0);
-        wheel4 = new SwerveModule(dm4, tm4, 0, 0, 0,0,0);
+        
+        wheel1 = new SwerveModule(Module1.DRIVE_ID, Module1.TURN_ID, Module1.kP, Module1.kI, Module1.kD,Module1.kFF,Module1.kIz);
+        wheel2 = new SwerveModule(Module2.DRIVE_ID, Module2.TURN_ID, Module2.kP, Module2.kI, Module2.kD,Module2.kFF,Module2.kIz);
+        wheel3 = new SwerveModule(Module3.DRIVE_ID, Module3.TURN_ID, Module3.kP, Module3.kI, Module3.kD,Module3.kFF,Module3.kIz);
+        wheel4 = new SwerveModule(Module4.DRIVE_ID, Module4.TURN_ID, Module4.kP, Module4.kI, Module4.kD,Module4.kFF,Module4.kIz);
     }
     /**Drive the robot at a given x speed, y speed, and spin speed. 
      * swerve drive allows each of these parameters to be independent of each other.

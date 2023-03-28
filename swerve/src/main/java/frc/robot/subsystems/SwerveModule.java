@@ -62,7 +62,11 @@ public class SwerveModule {
         pid.setReference(targetAngle, ControlType.kPosition);
     }
     public void driveSpeedSD(double direction, double orientation, double speed){
-        setAngle(direction - orientation);
+        //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low
+        if(speed > 0.0001){
+            setAngle(direction - orientation);
+        }
+            
         if(isInverted){speed *= -1;}
         DriveMotor.set(speed);
     }

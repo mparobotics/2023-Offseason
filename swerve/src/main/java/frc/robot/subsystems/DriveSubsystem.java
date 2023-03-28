@@ -15,7 +15,7 @@ public class DriveSubsystem extends SubsystemBase {
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
 
   public DriveSubsystem() {
-    m_swerveDrive = new SwerveDriveBase(0, 1, 2, 3, 4, 5, 6, 7);
+    m_swerveDrive = new SwerveDriveBase();
   }
   public void setDriveSpeedSwerve(double xSpeed, double ySpeed, double spinSpeed){
     //deadbanding
