@@ -88,7 +88,7 @@ public class SwerveModule {
         goalSpeed = speed;
     }
     public void driveSpeedXY(double x, double y, double orientation){
-        double angle = Math.atan2(y, x);
+        double angle = Math.toDegrees(Math.atan2(y, x));
         double speed = Math.hypot(x, y);
         driveSpeedSD(angle, orientation, speed);
     }

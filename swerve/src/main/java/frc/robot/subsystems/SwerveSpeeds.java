@@ -40,8 +40,8 @@ public class SwerveSpeeds {
             this.angle = b;
             
             //calculate x and y using speed and direction
-            this.x = Math.cos(b) * a;
-            this.y = Math.sin(b) * a;
+            this.x = Math.cos(Math.toRadians(b)) * a;
+            this.y = Math.sin(Math.toRadians(b)) * a;
         }
         else{
             //set x and y using inputs
@@ -50,7 +50,7 @@ public class SwerveSpeeds {
 
             //calculate speed and angle using x and y
             this.speed = Math.hypot(a,b);
-            this.angle = Math.atan2(b,a);
+            this.angle = Math.toDegrees(Math.atan2(b,a));
         }
         //set absolute value of speed
         this.absSpeed = Math.abs(speed);
