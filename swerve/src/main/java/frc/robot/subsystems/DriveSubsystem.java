@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
-  private SwerveDriveBase m_swerveDrive;
-  /** Creates a new DriveSubsystem. */
+  private SwerveDriveBase m_swerveDrive = new SwerveDriveBase();
+ 
   public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
 
+   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    m_swerveDrive = new SwerveDriveBase();
+
   }
   public void setDriveSpeedSwerve(double xSpeed, double ySpeed, double spinSpeed){
     //deadbanding

@@ -4,12 +4,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.Module1;
-import frc.robot.Constants.Module2;
-import frc.robot.Constants.Module3;
-import frc.robot.Constants.Module4;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.DriveConstants;
 /** Leo's swerve system */
 public class SwerveDriveBase {
     
@@ -33,12 +30,17 @@ public class SwerveDriveBase {
      */
     
     public SwerveDriveBase(){
-        //each module gets ids for a drive motor and turn motor, as well as coefficients for a PID controller.
+        //each module gets ids for a drive motor, turn motor, and an bsolute encoder as well as coefficients for a PID controller.
         
-        wheel1 = new SwerveModule(Module1.DRIVE_ID, Module1.TURN_ID, Module1.kP, Module1.kI, Module1.kD,Module1.kFF,Module1.kIz);
-        wheel2 = new SwerveModule(Module2.DRIVE_ID, Module2.TURN_ID, Module2.kP, Module2.kI, Module2.kD,Module2.kFF,Module2.kIz);
-        wheel3 = new SwerveModule(Module3.DRIVE_ID, Module3.TURN_ID, Module3.kP, Module3.kI, Module3.kD,Module3.kFF,Module3.kIz);
-        wheel4 = new SwerveModule(Module4.DRIVE_ID, Module4.TURN_ID, Module4.kP, Module4.kI, Module4.kD,Module4.kFF,Module4.kIz);
+        wheel1 = new SwerveModule(DriveConstants.DRIVE_ID_1, DriveConstants.TURN_ID_1,DriveConstants.ENCODER_1, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
+        wheel2 = new SwerveModule(DriveConstants.DRIVE_ID_2, DriveConstants.TURN_ID_2,DriveConstants.ENCODER_2, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
+        wheel3 = new SwerveModule(DriveConstants.DRIVE_ID_3, DriveConstants.TURN_ID_3,DriveConstants.ENCODER_3, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
+        wheel4 = new SwerveModule(DriveConstants.DRIVE_ID_4, DriveConstants.TURN_ID_4,DriveConstants.ENCODER_4, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
+    }
+    public SwerveSpeeds[] getStates(){
+      SwerveSpeeds[] states = {wheel1.getSpeeds(),wheel2.getSpeeds(), wheel3.getSpeeds(), wheel4.getSpeeds()};
+
+      return states;
     }
     /**Drive the robot at a given x speed, y speed, and spin speed. 
      * swerve drive allows each of these parameters to be independent of each other.

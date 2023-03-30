@@ -20,56 +20,30 @@ public final class Constants {
     
     public static final double ENCODER_ROTATIONS_TO_DEGREES = 1;
 
-  }
-  public static class Module1{
-    
-    public static final int DRIVE_ID = 0;
-    public static final int TURN_ID = 1;
-
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double kIz = 0;
     public static final double kFF = 0;
-  }
-  public static class Module2{
-    
-    public static final int DRIVE_ID = 2;
-    public static final int TURN_ID = 3;
-    
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
 
-    public static final double kIz = 0;
-    public static final double kFF = 0;
-  }
-  public static class Module3{
-    
-    public static final int DRIVE_ID = 4;
-    public static final int TURN_ID = 5;
-    
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final int DRIVE_ID_1 = 0;
+    public static final int DRIVE_ID_2 = 0;
+    public static final int DRIVE_ID_3 = 0;
+    public static final int DRIVE_ID_4 = 0;
 
-    public static final double kIz = 0;
-    public static final double kFF = 0;
-  }
-  public static class Module4{
-    
-    public static final int DRIVE_ID = 6;
-    public static final int TURN_ID = 7;
-    
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final int TURN_ID_1 = 0;
+    public static final int TURN_ID_2 = 0;
+    public static final int TURN_ID_3 = 0;
+    public static final int TURN_ID_4 = 0;
 
-    public static final double kIz = 0;
-    public static final double kFF = 0;
+    public static final int ENCODER_1 = 0;
+    public static final int ENCODER_2 = 0;
+    public static final int ENCODER_3 = 0;
+    public static final int ENCODER_4 = 0;
+
+
   }
-  
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

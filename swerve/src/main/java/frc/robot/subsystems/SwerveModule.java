@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.sensors.CANCoder;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -17,23 +19,30 @@ import frc.robot.Constants.DriveConstants;
  * contains a drive motor and a PID controlled turn motor
  */
 public class SwerveModule {
+
     private CANSparkMax DriveMotor;
     private RelativeEncoder DriveEncoder;
 
     private CANSparkMax TurnMotor;
     private RelativeEncoder TurnEncoder;
- 
-    private double setpoint = 0;
+    //assuming we are using cancoders - could replace with throughbore encoder
+    private CANCoder turnAbsoluteEncoder;
+    
 
+    private double setpoint = 0;
+    private double goalSpeed = 0;
     private boolean isInverted = false;
     private SparkMaxPIDController pid;
     
-    public SwerveModule(int driveMotor,int turnMotor, double kP, double kI, double kD,double kFF, double kIz){
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double kP, double kI, double kD,double kFF, double kIz){
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
         DriveEncoder = DriveMotor.getEncoder();
 
         TurnMotor = new CANSparkMax(turnMotor, MotorType.kBrushless);
         TurnEncoder = TurnMotor.getEncoder();
+
+        turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
+
         pid = TurnMotor.getPIDController();
         //set PID values
         pid.setP(kP);
@@ -56,10 +65,17 @@ public class SwerveModule {
 
         //if we're still more than 90deg away from target angle, then face in the opposite direction and drive backwards
         //now the farthest it ever needs to spin is 90 degrees
-        if(error > 90){error -= 180; isInverted = !isInverted;}
-        if(error < -90){error += 180; isInverted = !isInverted;}
+        if(error > 90){error -= 180; isInverted = true;}
+        else if(error < -90){error += 180; isInverted = true;}
+        else{ isInverted = false;}
+
         double targetAngle = wheelAngle + error;
-        pid.setReference(targetAngle, ControlType.kPosition);
+
+        pid.setReference(targetAngle / DriveConstants.ENCODER_ROTATIONS_TO_DEGREES, ControlType.kPosition);
+    }
+    public void setToEncoder(){
+        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition();
+        TurnEncoder.setPosition(currentAngle);
     }
     public void driveSpeedSD(double direction, double orientation, double speed){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low
@@ -69,6 +85,7 @@ public class SwerveModule {
             
         if(isInverted){speed *= -1;}
         DriveMotor.set(speed);
+        goalSpeed = speed;
     }
     public void driveSpeedXY(double x, double y, double orientation){
         double angle = Math.atan2(y, x);
@@ -82,10 +99,16 @@ public class SwerveModule {
     public SwerveSpeeds getSpeeds(){
         return SwerveSpeeds.SD(TurnEncoder.getPosition(), DriveEncoder.getVelocity());
     }
+    public SwerveSpeeds getSetpoints(){
+        return SwerveSpeeds.SD(setpoint, goalSpeed);
+    }
     public double getDirection(){
         return TurnEncoder.getPosition();
     }
     public double getSpeed(){
         return DriveEncoder.getVelocity();
+    }
+    public boolean isInverted(){
+        return isInverted;
     }
 }
