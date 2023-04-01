@@ -42,6 +42,18 @@ public class SwerveDriveBase {
 
       return states;
     }
+    public void setSpeeds(SwerveSpeeds speed1, SwerveSpeeds speed2, SwerveSpeeds speed3, SwerveSpeeds speed4, double orientation){
+      wheel1.driveSpeed(speed1, orientation);
+      wheel2.driveSpeed(speed2, orientation);
+      wheel3.driveSpeed(speed3, orientation);
+      wheel4.driveSpeed(speed4, orientation);
+    }
+    public void makeXposition(){
+      wheel1.setAngle(315);
+      wheel2.setAngle(45);
+      wheel3.setAngle(135);
+      wheel4.setAngle(225);
+    }
     /**Drive the robot at a given x speed, y speed, and spin speed. 
      * swerve drive allows each of these parameters to be independent of each other.
      * orientation should be a heading from a gyroscope for field-aligned driving
