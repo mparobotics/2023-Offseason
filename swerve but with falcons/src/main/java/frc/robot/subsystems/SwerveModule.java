@@ -23,7 +23,8 @@ public class SwerveModule {
  
 
     private WPI_TalonSRX TurnMotor;
-    private RelativeEncoder TurnEncoder;    //assuming we are using cancoders - could replace with throughbore encoder
+    private RelativeEncoder TurnEncoder;    
+    //assuming we are using cancoders - could replace with throughbore encoder
     private CANCoder turnAbsoluteEncoder;
     
 
@@ -32,7 +33,7 @@ public class SwerveModule {
     private boolean isInverted = false;
 
     
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double kP, double kI, double kD,double kFF, double kIz){
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder){
         DriveMotor = new WPI_TalonSRX(driveMotor);
         
 
@@ -41,11 +42,12 @@ public class SwerveModule {
 
         turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
         //set PID values
-        TurnMotor.config_kP(0, kP);
-        TurnMotor.config_kI(0, kI);
-        TurnMotor.config_kD(0, kD);
-        TurnMotor.config_IntegralZone(0, kIz);
-        TurnMotor.config_kF(0, kFF);
+        TurnMotor.config_kP(0, DriveConstants.kP);
+        TurnMotor.config_kI(0, DriveConstants.kI);
+        TurnMotor.config_kD(0, DriveConstants.kD);
+
+        TurnMotor.config_IntegralZone(0, DriveConstants.kIz);
+        TurnMotor.config_kF(0, DriveConstants.kFF);
 
         
         
@@ -72,8 +74,8 @@ public class SwerveModule {
         TurnMotor.set(ControlMode.Position, targetAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES);
     }
     public void setToEncoder(){
-        double currentPos = turnAbsoluteEncoder.getAbsolutePosition() * DriveConstants.ABSOLUTE_ENCODER_TICKS_TO_DEGREES / DriveConstants.ENCODER_TICKS_TO_DEGREES;
-        TurnEncoder.setPosition(currentPos);
+        double currentPos = turnAbsoluteEncoder.getAbsolutePosition() * DriveConstants.ABSOLUTE_ENCODER_TICKS_TO_DEGREES;
+        TurnEncoder.setPosition(currentPos / DriveConstants.ENCODER_TICKS_TO_DEGREES);
     }
     public void driveSpeedSD(double direction, double orientation, double speed){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low

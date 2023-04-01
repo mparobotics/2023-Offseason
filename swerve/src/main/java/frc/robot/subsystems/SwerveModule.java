@@ -34,7 +34,7 @@ public class SwerveModule {
     private boolean isInverted = false;
     private SparkMaxPIDController pid;
     
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double kP, double kI, double kD,double kFF, double kIz){
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder){
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
         DriveEncoder = DriveMotor.getEncoder();
 
@@ -45,18 +45,18 @@ public class SwerveModule {
 
         pid = TurnMotor.getPIDController();
         //set PID values
-        pid.setP(kP);
-        pid.setI(kI);
-        pid.setD(kD);
-        pid.setFF(kFF);
-        pid.setIZone(kIz);
+        pid.setP(DriveConstants.kP);
+        pid.setI(DriveConstants.kI);
+        pid.setD(DriveConstants.kD);
+        pid.setFF(DriveConstants.kIz);
+        pid.setIZone(DriveConstants.kFF);
         
     }
     //set the wheel angle to a value
     public void setAngle(double angle){
         setpoint = angle;
         //get current wheel angle in degrees
-        double wheelAngle = TurnEncoder.getPosition() * DriveConstants.ENCODER_ROTATIONS_TO_DEGREES;
+        double wheelAngle = TurnEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES;
         //get distance to nearest equivalent angle to target angle 
         double error = setpoint - wheelAngle;
 
@@ -71,11 +71,11 @@ public class SwerveModule {
 
         double targetAngle = wheelAngle + error;
 
-        pid.setReference(targetAngle / DriveConstants.ENCODER_ROTATIONS_TO_DEGREES, ControlType.kPosition);
+        pid.setReference(targetAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
     }
     public void setToEncoder(){
-        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition();
-        TurnEncoder.setPosition(currentAngle);
+        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * DriveConstants.ABSOLUTE_TICKS_TO_DEGREES;
+        TurnEncoder.setPosition(currentAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES);
     }
     public void driveSpeedSD(double direction, double orientation, double speed){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low

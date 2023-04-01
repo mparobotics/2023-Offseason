@@ -17,9 +17,11 @@ public final class Constants {
     public static final double DRIVE_SPEED = 1;
     public static final double TURN_SPEED = 1;
 
+    //conversion ratios for each type of encoder
+    public static final double ENCODER_TICKS_TO_DEGREES = 1;
+    public static final double ABSOLUTE_TICKS_TO_DEGREES = 1;
     
-    public static final double ENCODER_ROTATIONS_TO_DEGREES = 1;
-
+    //pid values for the motors
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -27,16 +29,21 @@ public final class Constants {
     public static final double kIz = 0;
     public static final double kFF = 0;
 
+    //motors go in counterclockwise order starting with the front right motor as #1
+
+    //these motors power the wheels
     public static final int DRIVE_ID_1 = 0;
     public static final int DRIVE_ID_2 = 0;
     public static final int DRIVE_ID_3 = 0;
     public static final int DRIVE_ID_4 = 0;
 
+    //these motors spin the wheels to the correct angle
     public static final int TURN_ID_1 = 0;
     public static final int TURN_ID_2 = 0;
     public static final int TURN_ID_3 = 0;
     public static final int TURN_ID_4 = 0;
 
+    //these absolute encoders remember the position of the wheels even when the robot is turned off
     public static final int ENCODER_1 = 0;
     public static final int ENCODER_2 = 0;
     public static final int ENCODER_3 = 0;

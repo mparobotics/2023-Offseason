@@ -32,10 +32,10 @@ public class SwerveDriveBase {
     public SwerveDriveBase(){
         //each module gets ids for a drive motor, turn motor, and an bsolute encoder as well as coefficients for a PID controller.
         
-        wheel1 = new SwerveModule(DriveConstants.DRIVE_ID_1, DriveConstants.TURN_ID_1,DriveConstants.ENCODER_1, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
-        wheel2 = new SwerveModule(DriveConstants.DRIVE_ID_2, DriveConstants.TURN_ID_2,DriveConstants.ENCODER_2, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
-        wheel3 = new SwerveModule(DriveConstants.DRIVE_ID_3, DriveConstants.TURN_ID_3,DriveConstants.ENCODER_3, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
-        wheel4 = new SwerveModule(DriveConstants.DRIVE_ID_4, DriveConstants.TURN_ID_4,DriveConstants.ENCODER_4, DriveConstants.kP, DriveConstants.kI, DriveConstants.kD,DriveConstants.kFF,DriveConstants.kIz);
+        wheel1 = new SwerveModule(DriveConstants.DRIVE_ID_1, DriveConstants.TURN_ID_1,DriveConstants.ENCODER_1);
+        wheel2 = new SwerveModule(DriveConstants.DRIVE_ID_2, DriveConstants.TURN_ID_2,DriveConstants.ENCODER_2);
+        wheel3 = new SwerveModule(DriveConstants.DRIVE_ID_3, DriveConstants.TURN_ID_3,DriveConstants.ENCODER_3);
+        wheel4 = new SwerveModule(DriveConstants.DRIVE_ID_4, DriveConstants.TURN_ID_4,DriveConstants.ENCODER_4);
     }
     public SwerveSpeeds[] getStates(){
       SwerveSpeeds[] states = {wheel1.getSpeeds(),wheel2.getSpeeds(), wheel3.getSpeeds(), wheel4.getSpeeds()};
