@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+
 import frc.robot.Constants.DriveConstants;
 
 /** Single Swerve Module:
@@ -33,8 +34,13 @@ public class SwerveModule {
     private double goalSpeed = 0;
     private boolean isInverted = false;
     private SparkMaxPIDController pid;
+
+    //option to have modules arranged in a formation besides a square
+    //each module gets a set of coordinates that represents its position relative to the robot's center
+
+    private Coord2D position;  
     
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder){
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double xposition, double yposition){
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
         DriveEncoder = DriveMotor.getEncoder();
 
@@ -43,6 +49,7 @@ public class SwerveModule {
 
         turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
 
+        
         pid = TurnMotor.getPIDController();
         //set PID values
         pid.setP(DriveConstants.kP);
@@ -50,8 +57,19 @@ public class SwerveModule {
         pid.setD(DriveConstants.kD);
         pid.setFF(DriveConstants.kIz);
         pid.setIZone(DriveConstants.kFF);
+
+        position = Coord2D.XY(xposition, yposition);
         
     }
+  
+    public Coord2D calculateIdealSpeeds(double xspeed, double yspeed, double spinspeed){
+        double angle = position.direction() + 90;
+        double ycomp = Math.cos(angle) * spinspeed;
+        double xcomp = -Math.sin(angle) * spinspeed;
+        return Coord2D.XY(xspeed + xcomp, yspeed + ycomp);
+    }
+  
+
     //set the wheel angle to a value
     public void setAngle(double angle){
         setpoint = angle;
@@ -93,14 +111,14 @@ public class SwerveModule {
         driveSpeedSD(angle, orientation, speed);
     }
     //get functions to retrieve position info
-    public void driveSpeed(SwerveSpeeds v, double orientation){
-        driveSpeedSD(v.angle, orientation, v.speed);
+    public void driveSpeed(Coord2D v, double orientation){
+        driveSpeedSD(v.direction(), orientation, v.length());
     }
-    public SwerveSpeeds getSpeeds(){
-        return SwerveSpeeds.SD(TurnEncoder.getPosition(), DriveEncoder.getVelocity());
+    public Coord2D getSpeeds(){
+        return Coord2D.SD(TurnEncoder.getPosition(), DriveEncoder.getVelocity());
     }
-    public SwerveSpeeds getSetpoints(){
-        return SwerveSpeeds.SD(setpoint, goalSpeed);
+    public Coord2D getSetpoints(){
+        return Coord2D.SD(setpoint, goalSpeed);
     }
     public double getDirection(){
         return TurnEncoder.getPosition();
