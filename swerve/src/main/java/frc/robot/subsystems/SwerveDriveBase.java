@@ -17,7 +17,7 @@ public class SwerveDriveBase {
     private final SwerveModule wheel3;
     private final SwerveModule wheel4;
     
-
+    
     /* the four modules are arranged like this:
    [ 3 ]-----------[ 2 ]
      |      Y        |
@@ -30,12 +30,21 @@ public class SwerveDriveBase {
      */
     
     public SwerveDriveBase(){
-        //each module gets ids for a drive motor, turn motor, and an bsolute encoder as well as coefficients for a PID controller.
+        //each module gets ids for a drive motor, turn motor, and an absolute encoder as well as coefficients for a PID controller.
         
         wheel1 = new SwerveModule(DriveConstants.DRIVE_ID_1, DriveConstants.TURN_ID_1,DriveConstants.ENCODER_1,1,-1);
         wheel2 = new SwerveModule(DriveConstants.DRIVE_ID_2, DriveConstants.TURN_ID_2,DriveConstants.ENCODER_2, 1, 1);
         wheel3 = new SwerveModule(DriveConstants.DRIVE_ID_3, DriveConstants.TURN_ID_3,DriveConstants.ENCODER_3,-1,1);
         wheel4 = new SwerveModule(DriveConstants.DRIVE_ID_4, DriveConstants.TURN_ID_4,DriveConstants.ENCODER_4,-1,-1);
+
+        double maxLength = Math.max(Math.max(wheel1.getDistance(),wheel2.getDistance()),Math.max(wheel3.getDistance(),wheel4.getDistance()));
+
+        wheel1.setScaleFactor(maxLength);
+        wheel2.setScaleFactor(maxLength);
+        wheel3.setScaleFactor(maxLength);
+        wheel4.setScaleFactor(maxLength);
+
+
     }
     public Coord2D[] getStates(){
       Coord2D[] states = {wheel1.getSpeeds(),wheel2.getSpeeds(), wheel3.getSpeeds(), wheel4.getSpeeds()};

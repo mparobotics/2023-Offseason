@@ -40,6 +40,7 @@ public class SwerveModule {
 
     private Coord2D position;  
     
+    private double scaleFactor = 1;
     public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double xposition, double yposition){
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
         DriveEncoder = DriveMotor.getEncoder();
@@ -68,7 +69,7 @@ public class SwerveModule {
         double xcomp = -Math.sin(angle) * spinspeed;
         return Coord2D.XY(xspeed + xcomp, yspeed + ycomp);
     }
-  
+    
 
     //set the wheel angle to a value
     public void setAngle(double angle){
@@ -95,15 +96,19 @@ public class SwerveModule {
         double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * DriveConstants.ABSOLUTE_TICKS_TO_DEGREES;
         TurnEncoder.setPosition(currentAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES);
     }
+    private void setMotorSpeed(double speed){
+        speed *= scaleFactor;
+        if(isInverted){speed *= -1;}
+        DriveMotor.set(speed);
+        goalSpeed = speed;
+    }
     public void driveSpeedSD(double direction, double orientation, double speed){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low
         if(speed > 0.0001){
             setAngle(direction - orientation);
         }
-            
-        if(isInverted){speed *= -1;}
-        DriveMotor.set(speed);
-        goalSpeed = speed;
+        setMotorSpeed(speed);
+        
     }
     public void driveSpeedXY(double x, double y, double orientation){
         double angle = Math.toDegrees(Math.atan2(y, x));
@@ -128,5 +133,11 @@ public class SwerveModule {
     }
     public boolean isInverted(){
         return isInverted;
+    }
+    public double getDistance(){
+        return position.length();
+    }
+    public void setScaleFactor(double maxLength){
+        scaleFactor = position.length() / maxLength;
     }
 }
