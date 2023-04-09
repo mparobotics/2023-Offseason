@@ -13,7 +13,10 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 
 /** Single Swerve Module:
@@ -31,17 +34,16 @@ public class SwerveModule {
     
 
     private double setpoint = 0;
-    private double goalSpeed = 0;
     private boolean isInverted = false;
     private SparkMaxPIDController pid;
 
     //option to have modules arranged in a formation besides a square
     //each module gets a set of coordinates that represents its position relative to the robot's center
 
-    private Coord2D position;  
+    private Translation2d position;  
     
-    private double scaleFactor = 1;
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, double xposition, double yposition){
+    
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, Translation2d pos){
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
         DriveEncoder = DriveMotor.getEncoder();
 
@@ -59,15 +61,15 @@ public class SwerveModule {
         pid.setFF(DriveConstants.kIz);
         pid.setIZone(DriveConstants.kFF);
 
-        position = Coord2D.XY(xposition, yposition);
+        position = pos;
         
     }
   
-    public Coord2D calculateIdealSpeeds(double xspeed, double yspeed, double spinspeed){
-        double angle = position.direction() + 90;
+    public Translation2d calculateIdealSpeeds(double xspeed, double yspeed, double spinspeed){
+        double angle = position.getAngle().getDegrees() + 90;
         double ycomp = Math.cos(angle) * spinspeed;
         double xcomp = -Math.sin(angle) * spinspeed;
-        return Coord2D.XY(xspeed + xcomp, yspeed + ycomp);
+        return new Translation2d(xspeed + xcomp, yspeed + ycomp);
     }
     
 
@@ -97,10 +99,8 @@ public class SwerveModule {
         TurnEncoder.setPosition(currentAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES);
     }
     private void setMotorSpeed(double speed){
-        speed *= scaleFactor;
         if(isInverted){speed *= -1;}
         DriveMotor.set(speed);
-        goalSpeed = speed;
     }
     public void driveSpeedSD(double direction, double orientation, double speed){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low
@@ -115,29 +115,35 @@ public class SwerveModule {
         double speed = Math.hypot(x, y);
         driveSpeedSD(angle, orientation, speed);
     }
-    //get functions to retrieve position info
-    public void driveSpeed(Coord2D v, double orientation){
-        driveSpeedSD(v.direction(), orientation, v.length());
+    public void driveSpeed(Translation2d v, double orientation){
+        driveSpeedSD(v.getAngle().getDegrees(), orientation, v.getNorm());
     }
-    public Coord2D getSpeeds(){
-        return Coord2D.SD(TurnEncoder.getPosition(), DriveEncoder.getVelocity());
+    public void driveSpeedMeters(SwerveModuleState state, double orientation){
+        driveSpeedSD(state.angle.getDegrees() / DriveConstants.MAX_SPEED,orientation,state.speedMetersPerSecond / DriveConstants.MAX_SPEED);
     }
-    public Coord2D getSetpoints(){
-        return Coord2D.SD(setpoint, goalSpeed);
-    }
-    public double getDirection(){
-        return TurnEncoder.getPosition();
+    
+    
+    public Rotation2d getDirection(){
+        return new Rotation2d(Math.toRadians(TurnEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES));
     }
     public double getSpeed(){
         return DriveEncoder.getVelocity();
     }
+    public double getMetersTraveled(){
+        return DriveEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES;
+    }
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(getSpeed() ,getDirection());
+    }
+    public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(getMetersTraveled(), getDirection());
+    }
     public boolean isInverted(){
         return isInverted;
     }
-    public double getDistance(){
-        return position.length();
-    }
-    public void setScaleFactor(double maxLength){
-        scaleFactor = position.length() / maxLength;
+    
+    
+    public double ScaleSpeed(double maxLength){
+        return  position.getNorm() / maxLength;
     }
 }

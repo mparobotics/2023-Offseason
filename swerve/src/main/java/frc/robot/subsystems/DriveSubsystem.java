@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,8 +11,7 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveBase m_swerveDrive = new SwerveDriveBase();
- 
-  public WPI_Pigeon2 pigeon = new WPI_Pigeon2(0);
+  
 
    /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -31,7 +29,7 @@ public class DriveSubsystem extends SubsystemBase {
     spinSpeed *= DriveConstants.TURN_SPEED;
 
     //set the drive speed
-    m_swerveDrive.SwerveDrive(xSpeed, ySpeed, spinSpeed, pigeon.getYaw());
+    m_swerveDrive.SwerveDrive(xSpeed, ySpeed, spinSpeed);
   }
   public InstantCommand Xposition(){
     return new InstantCommand(() -> m_swerveDrive.makeXposition());
@@ -39,5 +37,6 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    m_swerveDrive.updateOdometry();
   }
 }

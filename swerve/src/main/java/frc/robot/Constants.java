@@ -14,6 +14,7 @@ package frc.robot;
  */
 public final class Constants {
   public static class DriveConstants{
+    //teleop driving speeds
     public static final double DRIVE_SPEED = 1;
     public static final double TURN_SPEED = 1;
 
@@ -21,7 +22,10 @@ public final class Constants {
     public static final double ENCODER_TICKS_TO_DEGREES = 1;
     public static final double ABSOLUTE_TICKS_TO_DEGREES = 1;
     
-    //pid values for the motors
+    public static final double ENCODER_TICKS_TO_METERS = 1;
+
+    public static final double MAX_SPEED = 1;
+    //PID values for the motors
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -31,6 +35,11 @@ public final class Constants {
 
     //motors go in counterclockwise order starting with the front right motor as #1
 
+    //IDs for the components of the swerve drive
+
+    //this pigeon2 gyroscope measures the orientation of the robot
+    public static final int GYRO_ID = 0;
+  
     //these motors power the wheels
     public static final int DRIVE_ID_1 = 0;
     public static final int DRIVE_ID_2 = 0;
@@ -48,6 +57,14 @@ public final class Constants {
     public static final int ENCODER_2 = 0;
     public static final int ENCODER_3 = 0;
     public static final int ENCODER_4 = 0;
+
+
+  }
+  public static class TrajectoryConstants{
+
+    public static final double kP_X = 0;
+    public static final double kP_Y = 0;
+    public static final double kP_D = 0;
 
 
   }
