@@ -5,12 +5,21 @@
 package frc.robot;
 
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.autos.HighCubeBalance;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.SwerveSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.XboxController.Button;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,11 +32,40 @@ public class RobotContainer {
   
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(0);
+  private final CommandXboxController m_XboxController = new CommandXboxController(0);
+  //private final CommandJoystick m_JoystickL = new CommandJoystick(0);
+  //private final CommandJoystick m_JoystickR = new CommandJoystick(1);
+
+  /* Drive Controls */
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  
+  private final Trigger robotCentric =
+  new Trigger(m_XboxController.leftBumper());
+
+
+  /*private final int translationAxis = Joystick.AxisType.kY.value; //left flight stick
+  private final int strafeAxis = Joystick.AxisType.kX.value; //left flight stick
+  private final int rotationAxis = Joystick.AxisType.kX.value; //right flight stick*/
+
+  /* Subsystems */
+  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
+
+
+
+  
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_SwerveSubsystem.setDefaultCommand(
+      new TeleopSwerve(
+          m_SwerveSubsystem,
+          () -> -m_XboxController.getRawAxis(translationAxis),
+          () -> -m_XboxController.getRawAxis(strafeAxis),
+          () -> -m_XboxController.getRawAxis(rotationAxis),
+          () -> robotCentric.getAsBoolean()));
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -42,7 +80,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-  
+    m_XboxController.button(Button.kY.value).onTrue(new InstantCommand(() -> m_SwerveSubsystem.zeroGyro()));
    
   }
 
@@ -53,6 +91,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new HighCubeBalance(m_SwerveSubsystem);
   }
 }

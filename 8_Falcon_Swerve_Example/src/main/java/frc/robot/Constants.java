@@ -5,10 +5,12 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.SwerveModuleConstants;
 
@@ -52,23 +54,10 @@ public final class Constants {
     /* Swerve Voltage Compensation */
     public static final double voltageComp = 12.0;
        
-    /* Swerve Current Limiting for neos
+    //Swerve Current Limiting for neos
     public static final int angleContinuousCurrentLimit = 20; //limits current draw of turning motor
     public static final int driveContinuousCurrentLimit = 80; //limits current draw of drive motor
-    */
-
-    //for falcons
-    /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 25;
-    public static final int anglePeakCurrentLimit = 40;
-    public static final double anglePeakCurrentDuration = 0.1;
-    public static final boolean angleEnableCurrentLimit = true;
-
-    public static final int driveContinuousCurrentLimit = 35;
-    public static final int drivePeakCurrentLimit = 60;
-    public static final double drivePeakCurrentDuration = 0.1;
-    public static final boolean driveEnableCurrentLimit = true;
-
+  
 
     /* Angle Motor PID Values */
     public static final double angleKP = 0.01; //to tune
@@ -99,8 +88,8 @@ public final class Constants {
     public static final double maxAngularVelocity = 11.5; //what are these units?
 
     /* Neutral Modes */
-    public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
-    public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
+    public static final IdleMode angleNeutralMode = IdleMode.kBrake;
+    public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
     /* Motor Inverts */
     public static final boolean driveInvert = false;
@@ -157,20 +146,27 @@ public final class Constants {
     public static final boolean driveMotorInvert = false;
 
     
-    
-    
-    
-
-    
-
-    
-
-
-
 
 
 
   }
+
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    // Constraint for the motion profilied robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
 
 
 }
