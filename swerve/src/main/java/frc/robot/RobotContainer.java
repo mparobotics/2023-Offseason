@@ -6,10 +6,19 @@ package frc.robot;
 
 
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kTrajectory;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveBase;
 
@@ -52,13 +61,40 @@ public class RobotContainer {
 
   }
 
+  
+  SequentialCommandGroup followTrajectory(String file){
+    return m_SwerveDrive.followTrajectory(file);
+  }
+  SequentialCommandGroup followTrajectory(Trajectory t){
+    return m_SwerveDrive.followTrajectory(t);
+  }
+  public SequentialCommandGroup makeTrajectory(Pose2d start, Pose2d end){
+    TrajectoryConfig config = new TrajectoryConfig(kTrajectory.MAX_VELOCITY, kTrajectory.MAX_ACCELERATION);
+    return followTrajectory(TrajectoryGenerator.generateTrajectory(start,List.of(),end,config));
+  }
+
+  // /
+  SequentialCommandGroup SimpleTestAuto(){
+    return new SequentialCommandGroup(
+      makeTrajectory(
+        new Pose2d(), 
+        new Pose2d(3,0,Rotation2d.fromDegrees(0))
+      )
+    );
+    
+  }
+
+
+  
+  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    
+    return SimpleTestAuto();
   }
 }

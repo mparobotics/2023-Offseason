@@ -7,7 +7,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.kDrive;
 import frc.robot.subsystems.SwerveDriveBase;
 
 public class SwerveDrive extends CommandBase {
@@ -43,10 +43,10 @@ public class SwerveDrive extends CommandBase {
     if(Math.abs(ySpeed) < 0.1){ ySpeed = 0; }
     if(Math.abs(spinSpeed) < 0.1){ ySpeed = 0; }
     
-    xSpeed *= DriveConstants.DRIVE_SPEED;
-    ySpeed *= DriveConstants.DRIVE_SPEED;
+    xSpeed *= kDrive.DRIVE_SPEED;
+    ySpeed *= kDrive.DRIVE_SPEED;
 
-    spinSpeed *= DriveConstants.TURN_SPEED;
+    spinSpeed *= kDrive.TURN_SPEED;
    
 
   

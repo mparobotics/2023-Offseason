@@ -13,7 +13,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class DriveConstants{
+  public static class kDrive{
     //teleop driving speeds
     public static final double DRIVE_SPEED = 1;
     public static final double TURN_SPEED = 1;
@@ -60,15 +60,17 @@ public final class Constants {
 
 
   }
-  public static class TrajectoryConstants{
+  public static class kTrajectory{
 
     public static final double kP_X = 0;
     public static final double kP_Y = 0;
     public static final double kP_D = 0;
 
+    public static final double MAX_VELOCITY = 3; // meters/seconds
+    public static final double MAX_ACCELERATION = 1; // meters/seconds^2
 
   }
-  public static class OperatorConstants {
+  public static class kOperator {
     public static final int kDriverControllerPort = 0;
   }
 }

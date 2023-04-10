@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.kDrive;
 
 /** Single Swerve Module:
  * contains a drive motor and a PID controlled turn motor
@@ -55,11 +55,11 @@ public class SwerveModule {
         
         pid = TurnMotor.getPIDController();
         //set PID values
-        pid.setP(DriveConstants.kP);
-        pid.setI(DriveConstants.kI);
-        pid.setD(DriveConstants.kD);
-        pid.setFF(DriveConstants.kIz);
-        pid.setIZone(DriveConstants.kFF);
+        pid.setP(kDrive.kP);
+        pid.setI(kDrive.kI);
+        pid.setD(kDrive.kD);
+        pid.setFF(kDrive.kIz);
+        pid.setIZone(kDrive.kFF);
 
         position = pos;
         
@@ -77,7 +77,7 @@ public class SwerveModule {
     public void setAngle(double angle){
         setpoint = angle;
         //get current wheel angle in degrees
-        double wheelAngle = TurnEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES;
+        double wheelAngle = TurnEncoder.getPosition() * kDrive.ENCODER_TICKS_TO_DEGREES;
         //get distance to nearest equivalent angle to target angle 
         double error = setpoint - wheelAngle;
 
@@ -92,11 +92,11 @@ public class SwerveModule {
 
         double targetAngle = wheelAngle + error;
 
-        pid.setReference(targetAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
+        pid.setReference(targetAngle / kDrive.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
     }
     public void setToEncoder(){
-        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * DriveConstants.ABSOLUTE_TICKS_TO_DEGREES;
-        TurnEncoder.setPosition(currentAngle / DriveConstants.ENCODER_TICKS_TO_DEGREES);
+        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * kDrive.ABSOLUTE_TICKS_TO_DEGREES;
+        TurnEncoder.setPosition(currentAngle / kDrive.ENCODER_TICKS_TO_DEGREES);
     }
     private void setMotorSpeed(double speed){
         if(isInverted){speed *= -1;}
@@ -119,18 +119,18 @@ public class SwerveModule {
         driveSpeedSD(v.getAngle().getDegrees(), orientation, v.getNorm());
     }
     public void driveSpeedMeters(SwerveModuleState state, double orientation){
-        driveSpeedSD(state.angle.getDegrees() / DriveConstants.MAX_SPEED,orientation,state.speedMetersPerSecond / DriveConstants.MAX_SPEED);
+        driveSpeedSD(state.angle.getDegrees() / kDrive.MAX_SPEED,orientation,state.speedMetersPerSecond / kDrive.MAX_SPEED);
     }
     
     
     public Rotation2d getDirection(){
-        return new Rotation2d(Math.toRadians(TurnEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES));
+        return new Rotation2d(Math.toRadians(TurnEncoder.getPosition() * kDrive.ENCODER_TICKS_TO_DEGREES));
     }
     public double getSpeed(){
         return DriveEncoder.getVelocity();
     }
     public double getMetersTraveled(){
-        return DriveEncoder.getPosition() * DriveConstants.ENCODER_TICKS_TO_DEGREES;
+        return DriveEncoder.getPosition() * kDrive.ENCODER_TICKS_TO_DEGREES;
     }
     public SwerveModuleState getState(){
         return new SwerveModuleState(getSpeed() ,getDirection());
