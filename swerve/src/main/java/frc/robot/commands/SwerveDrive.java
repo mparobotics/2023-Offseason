@@ -7,22 +7,23 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveDriveBase;
 
 public class SwerveDrive extends CommandBase {
   private DoubleSupplier x;
   private DoubleSupplier y;
   private DoubleSupplier r;
 
-  private DriveSubsystem m_DriveSubsystem;
+  private SwerveDriveBase m_SwerveDrive;
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier spinSpeed, DriveSubsystem drivesub) {
+  public SwerveDrive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier spinSpeed, SwerveDriveBase drivesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.x = xSpeed;
     this.y = ySpeed;
     this.r = spinSpeed;
 
-    m_DriveSubsystem = drivesub;
+    m_SwerveDrive = drivesub;
     addRequirements(drivesub);
   }
 
@@ -33,7 +34,23 @@ public class SwerveDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DriveSubsystem.setDriveSpeedSwerve(x.getAsDouble(), y.getAsDouble(), r.getAsDouble());
+    double xSpeed = x.getAsDouble();
+    double ySpeed = y.getAsDouble();
+    double spinSpeed = r.getAsDouble();
+
+    //deadbanding
+    if(Math.abs(xSpeed) < 0.1){ xSpeed = 0; }
+    if(Math.abs(ySpeed) < 0.1){ ySpeed = 0; }
+    if(Math.abs(spinSpeed) < 0.1){ ySpeed = 0; }
+    
+    xSpeed *= DriveConstants.DRIVE_SPEED;
+    ySpeed *= DriveConstants.DRIVE_SPEED;
+
+    spinSpeed *= DriveConstants.TURN_SPEED;
+   
+
+  
+    m_SwerveDrive.SwerveDrive(xSpeed, ySpeed, spinSpeed);
   }
 
   // Called once the command ends or is interrupted.

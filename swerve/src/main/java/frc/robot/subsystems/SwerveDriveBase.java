@@ -23,13 +23,14 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.TrajectoryConstants;
 
 
 /** Leo's swerve system */
-public class SwerveDriveBase {
+public class SwerveDriveBase extends SubsystemBase{
     
     
     //the swerve drivebase has four modules - each has a motor to drive forward
@@ -77,6 +78,15 @@ public class SwerveDriveBase {
         //initialize the odometry with the kinematics, the gyro, an array of module distances and angles, and the starting pose
         odometry = new SwerveDriveOdometry(kinematics, pigeon.getRotation2d(), getPositions(),startingPos);
     }
+
+
+    @Override
+    public void periodic() {
+      // This method will be called once per scheduler run
+      updateOdometry();
+    }
+
+
     /*gets all four module positions in an array */
     public SwerveModulePosition[] getPositions(){
       SwerveModulePosition[] positions = {wheel1.getPosition(),wheel2.getPosition(), wheel3.getPosition(), wheel4.getPosition()};

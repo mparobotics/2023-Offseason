@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SwerveDrive;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SwerveDriveBase;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,7 +21,7 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private DriveSubsystem m_DriveSubsystem = new DriveSubsystem();
+  private SwerveDriveBase m_SwerveDrive = new SwerveDriveBase();
 
   private XboxController xbox = new XboxController(0);
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -31,7 +31,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_DriveSubsystem.setDefaultCommand(new SwerveDrive(() -> xbox.getLeftY(), () -> -xbox.getLeftX(), () -> xbox.getRightX(), m_DriveSubsystem));
+    m_SwerveDrive.setDefaultCommand(new SwerveDrive(() -> xbox.getLeftY(), () -> -xbox.getLeftX(), () -> xbox.getRightX(), m_SwerveDrive));
   }
 
   /**
