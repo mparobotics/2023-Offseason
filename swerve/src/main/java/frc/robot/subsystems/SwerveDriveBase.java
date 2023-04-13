@@ -48,10 +48,10 @@ public class SwerveDriveBase extends SubsystemBase{
     
   
   //positions of the wheels relative to the center of the robot (or the center of rotation of the robot, if you want it to rotate off center for some reason)
-  private Translation2d wheel1pos = new Translation2d(1,1);
-  private Translation2d wheel2pos = new Translation2d(-1,1);
-  private Translation2d wheel3pos = new Translation2d(-1,-1);
-  private Translation2d wheel4pos = new Translation2d(1,-1);
+  private Translation2d wheel1pos = new Translation2d(kDrive.HALF_WIDTH,kDrive.HALF_LENGTH);
+  private Translation2d wheel2pos = new Translation2d(-kDrive.HALF_WIDTH,kDrive.HALF_LENGTH);
+  private Translation2d wheel3pos = new Translation2d(-kDrive.HALF_WIDTH,-kDrive.HALF_LENGTH);
+  private Translation2d wheel4pos = new Translation2d(kDrive.HALF_WIDTH,-kDrive.HALF_LENGTH);
   //the distance from the farthest module to the center
   private double maxLength;
 
@@ -68,17 +68,20 @@ public class SwerveDriveBase extends SubsystemBase{
   private Pose2d startingPos = new Pose2d(0,0,new Rotation2d(Math.toRadians(0)));
 
   public SwerveDriveBase(){
-      //each module gets ids for a drive motor, turn motor, and an absolute encoder as well as a relative position to the center of the robot.
-      wheel1 = new SwerveModule(kDrive.DRIVE_ID_1, kDrive.TURN_ID_1,kDrive.ENCODER_1,wheel1pos);
-      wheel2 = new SwerveModule(kDrive.DRIVE_ID_2, kDrive.TURN_ID_2,kDrive.ENCODER_2, wheel2pos);
-      wheel3 = new SwerveModule(kDrive.DRIVE_ID_3, kDrive.TURN_ID_3,kDrive.ENCODER_3, wheel3pos);
-      wheel4 = new SwerveModule(kDrive.DRIVE_ID_4, kDrive.TURN_ID_4,kDrive.ENCODER_4,wheel4pos);
+    //each module gets ids for a drive motor, turn motor, and an absolute encoder as well as a relative position to the center of the robot.
+    wheel1 = new SwerveModule(kDrive.DRIVE_ID_1, kDrive.TURN_ID_1,kDrive.ENCODER_1,wheel1pos);
+    wheel2 = new SwerveModule(kDrive.DRIVE_ID_2, kDrive.TURN_ID_2,kDrive.ENCODER_2, wheel2pos);
+    wheel3 = new SwerveModule(kDrive.DRIVE_ID_3, kDrive.TURN_ID_3,kDrive.ENCODER_3, wheel3pos);
+    wheel4 = new SwerveModule(kDrive.DRIVE_ID_4, kDrive.TURN_ID_4,kDrive.ENCODER_4,wheel4pos);
 
-      //scale the wheel speeds to be porportional to their distances from the center (in most cases the distances are all the same, so this doesn't affect anything)
-      maxLength = Math.max(Math.max(wheel1pos.getNorm(),wheel2pos.getNorm()),Math.max(wheel3pos.getNorm(),wheel4pos.getNorm()));
+    //scale the wheel speeds to be porportional to their distances from the center (in most cases the distances are all the same, so this doesn't affect anything)
+    maxLength = Math.max(Math.max(wheel1pos.getNorm(),wheel2pos.getNorm()),Math.max(wheel3pos.getNorm(),wheel4pos.getNorm()));
 
-      //initialize the odometry with the kinematics, the gyro, an array of module distances and angles, and the starting pose
-      odometry = new SwerveDriveOdometry(kinematics, pigeon.getRotation2d(), getPositions(),startingPos);
+    //initialize the odometry with the kinematics, the gyro, an array of module distances and angles, and the starting pose
+    odometry = new SwerveDriveOdometry(kinematics, pigeon.getRotation2d(), getPositions(),startingPos);
+    
+    pigeon.zeroGyroBiasNow();
+  
   }
 
 
@@ -177,7 +180,7 @@ public class SwerveDriveBase extends SubsystemBase{
     PIDController Ypid = new PIDController(kTrajectory.kP_Y, 0, 0);
     ProfiledPIDController Dpid = new ProfiledPIDController(kTrajectory.kP_D, 0, 0,null);
     Dpid.enableContinuousInput(0, 2 * Math.PI);
-      
+    
     //creates the swerve controller command using the trajectory
     SwerveControllerCommand swerveCommand = new SwerveControllerCommand(
         traj,
@@ -205,5 +208,29 @@ public class SwerveDriveBase extends SubsystemBase{
     }
 
     return followTrajectory(pTrajectory);
+  }
+
+  public boolean AutoBalance(){
+    double kP = 0;
+
+    double[] down = {0,0,1};
+    pigeon.getGravityVector(down);
+    
+    Translation2d offset = new Translation2d(down[0],down[1]);
+    
+    double length = offset.getNorm();
+    double limit = Math.min(length, 0.1);
+    
+    offset.times(limit/length);
+
+    offset.times(-kP);
+    
+
+    if(length < 0.1){
+      return true;
+    }
+    
+    SwerveDrive(offset.getX(), offset.getY(), 0);
+    return false;
   }
 }

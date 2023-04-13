@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -18,13 +20,29 @@ public final class Constants {
     public static final double DRIVE_SPEED = 1;
     public static final double TURN_SPEED = 1;
 
+    //current limits
+    public static final int DRIVE_CURRENT_LIMIT = 80;
+    public static final int TURN_CURRENT_LIMIT = 20;
+    
+    public static final double VOLTAGE_COMPENSATION = 12;
+
+    //gear ratios and conversions
+    public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
+    public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+
+    public static final double HALF_WIDTH = 0.5 / 2;
+    public static final double HALF_LENGTH = 0.5 / 2;
+
+    public static final double DRIVE_GEAR_RATIO = 14/50 * 25/19 * 15/45;
+    public static final double TURN_GEAR_RATIO = 12.8/1;
+
     //conversion ratios for each type of encoder
-    public static final double ENCODER_TICKS_TO_DEGREES = 1;
+    public static final double ENCODER_TICKS_TO_DEGREES = 360/TURN_GEAR_RATIO;
     public static final double ABSOLUTE_TICKS_TO_DEGREES = 1;
     
-    public static final double ENCODER_TICKS_TO_METERS = 1;
+    public static final double ENCODER_TICKS_TO_METERS = WHEEL_CIRCUMFERENCE / DRIVE_GEAR_RATIO;
 
-    public static final double MAX_SPEED = 1;
+    public static final double MAX_SPEED = 4.5; // meters/second
     //PID values for the motors
     public static final double kP = 0;
     public static final double kI = 0;

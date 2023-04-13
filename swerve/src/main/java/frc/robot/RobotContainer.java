@@ -73,7 +73,7 @@ public class RobotContainer {
     return followTrajectory(TrajectoryGenerator.generateTrajectory(start,List.of(),end,config));
   }
 
-  // /
+  
   SequentialCommandGroup SimpleTestAuto(){
     return new SequentialCommandGroup(
       makeTrajectory(

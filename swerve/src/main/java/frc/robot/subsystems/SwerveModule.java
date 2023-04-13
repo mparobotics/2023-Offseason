@@ -5,12 +5,18 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,6 +33,7 @@ public class SwerveModule {
     private CANSparkMax DriveMotor;
     private RelativeEncoder DriveEncoder;
 
+    private CANCoderConfiguration CANCoderConfig = new CANCoderConfiguration();
     private CANSparkMax TurnMotor;
     private RelativeEncoder TurnEncoder;
     //assuming we are using cancoders - could replace with throughbore encoder
@@ -42,17 +49,33 @@ public class SwerveModule {
 
     private Translation2d position;  
     
-    
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, Translation2d pos){
-        DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
+    private void setupDriveMotor(){
+        
+        DriveMotor.restoreFactoryDefaults();
+        DriveMotor.setSmartCurrentLimit(kDrive.DRIVE_CURRENT_LIMIT);
+        DriveMotor.setInverted(false);
+        DriveMotor.setIdleMode(IdleMode.kBrake);
+
+        DriveMotor.enableVoltageCompensation(kDrive.VOLTAGE_COMPENSATION);
+
         DriveEncoder = DriveMotor.getEncoder();
 
-        TurnMotor = new CANSparkMax(turnMotor, MotorType.kBrushless);
+        DriveMotor.burnFlash();
+    }
+    private void setupTurnMotor(){
+        TurnMotor.restoreFactoryDefaults();
+        TurnMotor.setSmartCurrentLimit(kDrive.TURN_CURRENT_LIMIT);
+        TurnMotor.setInverted(false);
+        TurnMotor.setIdleMode(IdleMode.kBrake);
+
+        //since we only need the position of the turn motor, we can increase the delay between updates for not essential things like the velocity
+        TurnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 500);
+        TurnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        TurnMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus3, 500);
+        TurnMotor.enableVoltageCompensation(kDrive.VOLTAGE_COMPENSATION);
         TurnEncoder = TurnMotor.getEncoder();
 
-        turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
 
-        
         pid = TurnMotor.getPIDController();
         //set PID values
         pid.setP(kDrive.kP);
@@ -60,6 +83,31 @@ public class SwerveModule {
         pid.setD(kDrive.kD);
         pid.setFF(kDrive.kIz);
         pid.setIZone(kDrive.kFF);
+
+        TurnMotor.burnFlash();
+    }
+    private void setupAbsEncoder(){
+        CANCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        CANCoderConfig.sensorDirection = true;
+        CANCoderConfig.initializationStrategy =
+        SensorInitializationStrategy.BootToAbsolutePosition;
+        CANCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
+        turnAbsoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100);
+        turnAbsoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 100);
+    }
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, Translation2d pos){
+        TurnMotor = new CANSparkMax(turnMotor, MotorType.kBrushless);
+        DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
+        setupDriveMotor();
+        setupTurnMotor();
+        setupAbsEncoder();
+
+        
+
+        turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
+        
+        
+        
 
         position = pos;
         
