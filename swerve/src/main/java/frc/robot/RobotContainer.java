@@ -13,13 +13,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.XboxController;
+
+//import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kTrajectory;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.FancyJoystick;
 import frc.robot.subsystems.SwerveDriveBase;
 
 /**
@@ -32,7 +34,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private SwerveDriveBase m_SwerveDrive = new SwerveDriveBase();
 
-  private XboxController xbox = new XboxController(0);
+  //private XboxController xbox = new XboxController(0);
+
+  private FancyJoystick joystick = new FancyJoystick(2);
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
 
@@ -40,7 +45,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_SwerveDrive.setDefaultCommand(new SwerveDrive(() -> xbox.getLeftY(), () -> -xbox.getLeftX(), () -> xbox.getRightX(), m_SwerveDrive));
+
+    m_SwerveDrive.setDefaultCommand(new SwerveDrive(() -> joystick.getY() * joystick.getThrottle(), () -> -joystick.getX() * joystick.getThrottle(), () -> joystick.getRotation(), m_SwerveDrive));
   }
 
   /**
@@ -54,7 +60,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
- 
+  
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
