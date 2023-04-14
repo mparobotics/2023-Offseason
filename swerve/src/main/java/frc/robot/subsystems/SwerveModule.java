@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -42,7 +43,10 @@ public class SwerveModule {
 
     private double setpoint = 0;
     private boolean isInverted = false;
-    private SparkMaxPIDController pid;
+    private SparkMaxPIDController turnPID;
+    private SparkMaxPIDController drivePID;
+
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kDrive.kS, kDrive.kV, kDrive.kA);
 
     //option to have modules arranged in a formation besides a square
     //each module gets a set of coordinates that represents its position relative to the robot's center
@@ -60,6 +64,14 @@ public class SwerveModule {
 
         DriveEncoder = DriveMotor.getEncoder();
 
+        drivePID = DriveMotor.getPIDController();
+        //set PID values
+        drivePID.setP(kDrive.D_kP);
+        drivePID.setI(kDrive.D_kI);
+        drivePID.setD(kDrive.D_kD);
+        drivePID.setFF(kDrive.D_kIz);
+        drivePID.setIZone(kDrive.D_kFF);
+
         DriveMotor.burnFlash();
     }
     private void setupTurnMotor(){
@@ -76,13 +88,13 @@ public class SwerveModule {
         TurnEncoder = TurnMotor.getEncoder();
 
 
-        pid = TurnMotor.getPIDController();
+        turnPID = TurnMotor.getPIDController();
         //set PID values
-        pid.setP(kDrive.kP);
-        pid.setI(kDrive.kI);
-        pid.setD(kDrive.kD);
-        pid.setFF(kDrive.kIz);
-        pid.setIZone(kDrive.kFF);
+        turnPID.setP(kDrive.kP);
+        turnPID.setI(kDrive.kI);
+        turnPID.setD(kDrive.kD);
+        turnPID.setFF(kDrive.kIz);
+        turnPID.setIZone(kDrive.kFF);
 
         TurnMotor.burnFlash();
     }
@@ -140,7 +152,7 @@ public class SwerveModule {
 
         double targetAngle = wheelAngle + error;
 
-        pid.setReference(targetAngle / kDrive.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
+        turnPID.setReference(targetAngle / kDrive.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
     }
     public void setToEncoder(){
         double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * kDrive.ABSOLUTE_TICKS_TO_DEGREES;
@@ -150,24 +162,32 @@ public class SwerveModule {
         if(isInverted){speed *= -1;}
         DriveMotor.set(speed);
     }
-    public void driveSpeedSD(double direction, double orientation, double speed){
+    public void driveSpeedSD(double direction, double orientation, double speed, boolean isOpenLoop){
         //avoid wheels defaulting to 0 degrees when no speed is applied by not setting the angle if the speed is too low
         if(speed > 0.0001){
             setAngle(direction - orientation);
         }
-        setMotorSpeed(speed);
+        if(isOpenLoop){
+            setMotorSpeed(speed);
+        }
+        else{
+            drivePID.setReference(speed, ControlType.kVelocity, 0, feedforward.calculate(speed));
+        }
+        
         
     }
     public void driveSpeedXY(double x, double y, double orientation){
         double angle = Math.toDegrees(Math.atan2(y, x));
         double speed = Math.hypot(x, y);
-        driveSpeedSD(angle, orientation, speed);
+        driveSpeedSD(angle, orientation, speed, true);
     }
     public void driveSpeed(Translation2d v, double orientation){
-        driveSpeedSD(v.getAngle().getDegrees(), orientation, v.getNorm());
+        driveSpeedSD(v.getAngle().getDegrees(), orientation, v.getNorm(), true);
     }
-    public void driveSpeedMeters(SwerveModuleState state, double orientation){
-        driveSpeedSD(state.angle.getDegrees() / kDrive.MAX_SPEED,orientation,state.speedMetersPerSecond / kDrive.MAX_SPEED);
+    public void driveSpeedMeters(SwerveModuleState state, double orientation, boolean isOpenLoopControl){
+     
+        driveSpeedSD(state.angle.getDegrees() / kDrive.MAX_SPEED,orientation,state.speedMetersPerSecond / kDrive.MAX_SPEED, isOpenLoopControl);
+        
     }
     
     

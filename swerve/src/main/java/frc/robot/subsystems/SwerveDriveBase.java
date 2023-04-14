@@ -102,10 +102,10 @@ public class SwerveDriveBase extends SubsystemBase{
    * this method is mainly meant to be used by the trajectory commands to drive the modules along the trajectory
   */
   public void setStates(SwerveModuleState[] states){
-    wheel1.driveSpeedMeters(states[0], getDirection());
-    wheel2.driveSpeedMeters(states[1], getDirection());
-    wheel3.driveSpeedMeters(states[2], getDirection());
-    wheel4.driveSpeedMeters(states[3], getDirection());
+    wheel1.driveSpeedMeters(states[0], getDirection(),true);
+    wheel2.driveSpeedMeters(states[1], getDirection(),true);
+    wheel3.driveSpeedMeters(states[2], getDirection(),true);
+    wheel4.driveSpeedMeters(states[3], getDirection(),true);
 
   }
 
