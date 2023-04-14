@@ -97,13 +97,14 @@ public class SwerveSubsystem extends SubsystemBase {
     return states;
   }
 
-  public SwerveModulePosition[] getPositions() {
+  public SwerveModulePosition[] getPositions(){
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
-    for (SwerveModule mod : mSwerveMods) {
-      positions[mod.moduleNumber] = mod.getPosition();
+    for(SwerveModule mod : mSwerveMods){
+        positions[mod.moduleNumber] = mod.getPosition();
     }
     return positions;
-  }
+}
+
 
   public void zeroGyro() {
     pigeon.setYaw(0);

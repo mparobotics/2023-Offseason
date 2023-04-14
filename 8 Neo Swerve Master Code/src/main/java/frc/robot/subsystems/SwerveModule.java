@@ -175,10 +175,10 @@ public class SwerveModule {
         //sets encoder to read positions as meters traveled
         driveEncoder.setPositionConversionFactor(Constants.SwerveConstants.driveConversionPositionFactor);
         //pid setting fun
-        driveController.setP(Constants.SwerveConstants.angleKP);
-        driveController.setI(Constants.SwerveConstants.angleKI);
-        driveController.setD(Constants.SwerveConstants.angleKD);
-        driveController.setFF(Constants.SwerveConstants.angleKFF);
+        driveController.setP(Constants.SwerveConstants.driveKP);
+        driveController.setI(Constants.SwerveConstants.driveKI);
+        driveController.setD(Constants.SwerveConstants.driveKD);
+        driveController.setFF(Constants.SwerveConstants.driveKFF);
         driveMotor.enableVoltageCompensation(Constants.SwerveConstants.voltageComp);
         //burns to spark max
         driveMotor.burnFlash();
