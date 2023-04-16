@@ -59,12 +59,7 @@ public final class Constants {
     public static final int driveContinuousCurrentLimit = 80; //limits current draw of drive motor
   
 
-    /* Angle Motor PID Values */
-    public static final double angleKP = 0.01; //to tune
-    public static final double angleKI = 0.0; //to tune
-    public static final double angleKD = 0.0; //to tune
-    public static final double angleKFF = 0.0; //to tune
-    
+
     /* Drive Motor PID Values */
     public static final double driveKP = 0.1; //to tune
     public static final double driveKI = 0.0; //to tune
@@ -106,8 +101,14 @@ public final class Constants {
       public static final int angleMotorID = 2; 
       public static final int canCoderID = 9;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(162.77);
+    /* Angle Motor PID Values */
+      public static final double angleKP = 0.01; //to tune
+      public static final double angleKI = 0.0; //to tune
+      public static final double angleKD = 0.0; //to tune
+      public static final double angleKFF = 0.0; //to tune
+    
       public static final SwerveModuleConstants constants =
-          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, angleKP, angleKI, angleKD, angleKFF);
           //creates a constant with all info from swerve module
     }
 
@@ -117,8 +118,15 @@ public final class Constants {
       public static final int angleMotorID = 4;
       public static final int canCoderID = 10;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(159.2);
+      /* Angle Motor PID Values */
+      public static final double angleKP = 0.01; //to tune
+      public static final double angleKI = 0.0; //to tune
+      public static final double angleKD = 0.0; //to tune
+      public static final double angleKFF = 0.0; //to tune
+        
       public static final SwerveModuleConstants constants =
-          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, angleKP, angleKI, angleKD, angleKFF);
+          //creates a constant with all info from swerve module
     }
 
     /* Back Left Module - Module 2 */
@@ -127,8 +135,15 @@ public final class Constants {
       public static final int angleMotorID = 8;
       public static final int canCoderID = 11;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(42.80);
+      /* Angle Motor PID Values */
+      public static final double angleKP = 0.01; //to tune
+      public static final double angleKI = 0.0; //to tune
+      public static final double angleKD = 0.0; //to tune
+      public static final double angleKFF = 0.0; //to tune
+  
       public static final SwerveModuleConstants constants =
-          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+        new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, angleKP, angleKI, angleKD, angleKFF);
+        //creates a constant with all info from swerve module
     }
 
     /* Back Right Module - Module 3 */
@@ -137,8 +152,15 @@ public final class Constants {
       public static final int angleMotorID = 6;
       public static final int canCoderID = 12 ;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(138.43);
+        /* Angle Motor PID Values */
+      public static final double angleKP = 0.02; //to tune
+      public static final double angleKI = 0.0; //to tune
+      public static final double angleKD = 0.0; //to tune
+      public static final double angleKFF = 0.0; //to tune
+    
       public static final SwerveModuleConstants constants =
-          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
+          new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset, angleKP, angleKI, angleKD, angleKFF);
+          //creates a constant with all info from swerve module
     }
   
 

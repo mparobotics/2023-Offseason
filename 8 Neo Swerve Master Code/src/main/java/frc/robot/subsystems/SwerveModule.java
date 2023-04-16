@@ -29,6 +29,10 @@ import frc.robot.Robot;
 /** Add your docs here. */
 public class SwerveModule {
     public int moduleNumber;
+    public double m_angleKP;
+    public double m_angleKI;
+    public double m_angleKD;
+    public double m_angleKFF;
     private Rotation2d lastAngle;
     private Rotation2d angleOffset;
 
@@ -51,6 +55,10 @@ public class SwerveModule {
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
         this.moduleNumber = moduleNumber;
+        this.m_angleKP = moduleConstants.angleKP;
+        this.m_angleKI = moduleConstants.angleKI;
+        this.m_angleKD = moduleConstants.angleKD;
+        this.m_angleKFF = moduleConstants.angleKFF;
         angleOffset = moduleConstants.angleOffset;
         //this.?
         /* Angle Encoder Config */
@@ -148,10 +156,10 @@ public class SwerveModule {
         //sets a conversion factor for the encoder so it output correlates with the rotation of the module
         integratedAngleEncoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
         //oops pid loop time sets the pid
-        angleController.setP(Constants.SwerveConstants.angleKP);
-        angleController.setI(Constants.SwerveConstants.angleKI);
-        angleController.setD(Constants.SwerveConstants.angleKD);
-        angleController.setFF(Constants.SwerveConstants.angleKFF);
+        angleController.setP(m_angleKP);
+        angleController.setI(m_angleKI);
+        angleController.setD(m_angleKD);
+        angleController.setFF(m_angleKFF);
         angleMotor.enableVoltageCompensation(Constants.SwerveConstants.voltageComp);
         //burns spark max
         angleMotor.burnFlash();
