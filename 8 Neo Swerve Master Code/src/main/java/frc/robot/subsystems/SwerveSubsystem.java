@@ -34,9 +34,6 @@ public class SwerveSubsystem extends SubsystemBase {
     pigeon.configFactoryDefault();
     zeroGyro();
 
-    //creates new swerve odometry (odometry is where the robot is on the field)
-    swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getYaw(), getPositions());
-
     //Creates all four swerve modules into a swerve drive
     mSwerveMods =
     new SwerveModule[] {
@@ -45,6 +42,9 @@ public class SwerveSubsystem extends SubsystemBase {
       new SwerveModule(2, Constants.SwerveConstants.Mod2.constants),
       new SwerveModule(3, Constants.SwerveConstants.Mod3.constants)
     };
+
+    //creates new swerve odometry (odometry is where the robot is on the field)
+    swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getYaw(), getPositions());
 
     //puts out the field
     field = new Field2d();
