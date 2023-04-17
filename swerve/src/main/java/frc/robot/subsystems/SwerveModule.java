@@ -45,7 +45,7 @@ public class SwerveModule {
     private boolean isInverted = false;
     private SparkMaxPIDController turnPID;
     private SparkMaxPIDController drivePID;
-
+    double CANCoderOffset;
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kDrive.kS, kDrive.kV, kDrive.kA);
 
     //option to have modules arranged in a formation besides a square
@@ -98,7 +98,7 @@ public class SwerveModule {
 
         TurnMotor.burnFlash();
     }
-    private void setupAbsEncoder(){
+    private void setupAbsEncoder(double offset){
         CANCoderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         CANCoderConfig.sensorDirection = true;
         CANCoderConfig.initializationStrategy =
@@ -106,17 +106,19 @@ public class SwerveModule {
         CANCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
         turnAbsoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100);
         turnAbsoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 100);
+        CANCoderOffset = offset;
     }
-    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, Translation2d pos){
+    public SwerveModule(int driveMotor,int turnMotor, int absoluteEncoder, Translation2d pos, double canCoderOffset){
         TurnMotor = new CANSparkMax(turnMotor, MotorType.kBrushless);
         DriveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
+        turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
         setupDriveMotor();
         setupTurnMotor();
-        setupAbsEncoder();
+        setupAbsEncoder(canCoderOffset);
 
         
 
-        turnAbsoluteEncoder = new CANCoder(absoluteEncoder);
+        
         
         
         
@@ -155,7 +157,7 @@ public class SwerveModule {
         turnPID.setReference(targetAngle / kDrive.ENCODER_TICKS_TO_DEGREES, ControlType.kPosition);
     }
     public void setToEncoder(){
-        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * kDrive.ABSOLUTE_TICKS_TO_DEGREES;
+        double currentAngle = turnAbsoluteEncoder.getAbsolutePosition() * kDrive.ABSOLUTE_TICKS_TO_DEGREES - CANCoderOffset;
         TurnEncoder.setPosition(currentAngle / kDrive.ENCODER_TICKS_TO_DEGREES);
     }
     private void setMotorSpeed(double speed){

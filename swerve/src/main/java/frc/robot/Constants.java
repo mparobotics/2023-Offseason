@@ -26,12 +26,14 @@ public final class Constants {
     
     public static final double VOLTAGE_COMPENSATION = 12;
 
+
+
     //gear ratios and conversions
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4); //4 inch wheels - but all units in meters for consistency
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; //circumference = PI * diameter
 
-    public static final double HALF_WIDTH = 0.5 / 2; //distance from center to the side of the robot
-    public static final double HALF_LENGTH = 0.5 / 2; //distance from center to the front of the robot
+    public static final double HALF_WIDTH = Units.inchesToMeters(17.5) / 2; //distance from center to the side of the robot
+    public static final double HALF_LENGTH = Units.inchesToMeters(20.5) / 2; //distance from center to the front of the robot
 
     public static final double DRIVE_GEAR_RATIO = 14/50 * 25/19 * 15/45; // ~8.14 motor rotation = 1 wheel rotation
     public static final double TURN_GEAR_RATIO = 12.8/1; //12.8 motor rotations = 1 full wheel swivel
@@ -45,7 +47,7 @@ public final class Constants {
     //the fastest the robot can go
     public static final double MAX_SPEED = 4.5; // meters/second
     //PID values for the turn motors
-    public static final double kP = 0;
+    public static final double kP = 0.01;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -53,7 +55,7 @@ public final class Constants {
     public static final double kFF = 0;
 
     //PID values for the drive motors
-    public static final double D_kP = 0;
+    public static final double D_kP = 0.1;
     public static final double D_kI = 0;
     public static final double D_kD = 0;
 
@@ -67,29 +69,30 @@ public final class Constants {
 
     //motors go in counterclockwise order starting with the front right motor as #1
 
+  
     //IDs for the components of the swerve drive
 
     //this pigeon2 gyroscope measures the orientation of the robot
-    public static final int GYRO_ID = 0;
+    public static final int GYRO_ID = 17;
   
 
     //these motors power the wheels
-    public static final int DRIVE_ID_1 = 2;
-    public static final int DRIVE_ID_2 = 4;
-    public static final int DRIVE_ID_3 = 6;
-    public static final int DRIVE_ID_4 = 8;
+    public static final int DRIVE_ID_1 = 1;
+    public static final int DRIVE_ID_2 = 3;
+    public static final int DRIVE_ID_3 = 5;
+    public static final int DRIVE_ID_4 = 7;
 
     //these motors spin the wheels to the correct angle
-    public static final int TURN_ID_1 = 1;
-    public static final int TURN_ID_2 = 3;
-    public static final int TURN_ID_3 = 5;
-    public static final int TURN_ID_4 = 7;
+    public static final int TURN_ID_1 = 2;
+    public static final int TURN_ID_2 = 4;
+    public static final int TURN_ID_3 = 6;
+    public static final int TURN_ID_4 = 8;
 
     //these absolute encoders remember the position of the wheels even when the robot is turned off
-    public static final int ENCODER_1 = 0;
-    public static final int ENCODER_2 = 0;
-    public static final int ENCODER_3 = 0;
-    public static final int ENCODER_4 = 0;
+    public static final int ENCODER_1 = 9;
+    public static final int ENCODER_2 = 10;
+    public static final int ENCODER_3 = 11;
+    public static final int ENCODER_4 = 12;
 
 
   }

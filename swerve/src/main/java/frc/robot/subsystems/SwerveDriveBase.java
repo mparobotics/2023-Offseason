@@ -48,10 +48,10 @@ public class SwerveDriveBase extends SubsystemBase{
     
   
   //positions of the wheels relative to the center of the robot (or the center of rotation of the robot, if you want it to rotate off center for some reason)
-  private Translation2d wheel1pos = new Translation2d(kDrive.HALF_WIDTH,kDrive.HALF_LENGTH);
-  private Translation2d wheel2pos = new Translation2d(-kDrive.HALF_WIDTH,kDrive.HALF_LENGTH);
-  private Translation2d wheel3pos = new Translation2d(-kDrive.HALF_WIDTH,-kDrive.HALF_LENGTH);
-  private Translation2d wheel4pos = new Translation2d(kDrive.HALF_WIDTH,-kDrive.HALF_LENGTH);
+  private Translation2d wheel1pos = new Translation2d(kDrive.HALF_LENGTH,-kDrive.HALF_WIDTH);
+  private Translation2d wheel2pos = new Translation2d(-kDrive.HALF_LENGTH,-kDrive.HALF_WIDTH);
+  private Translation2d wheel3pos = new Translation2d(-kDrive.HALF_LENGTH,kDrive.HALF_WIDTH);
+  private Translation2d wheel4pos = new Translation2d(kDrive.HALF_LENGTH,kDrive.HALF_WIDTH);
   //the distance from the farthest module to the center
   private double maxLength;
 
@@ -69,10 +69,10 @@ public class SwerveDriveBase extends SubsystemBase{
 
   public SwerveDriveBase(){
     //each module gets ids for a drive motor, turn motor, and an absolute encoder as well as a relative position to the center of the robot.
-    wheel1 = new SwerveModule(kDrive.DRIVE_ID_1, kDrive.TURN_ID_1,kDrive.ENCODER_1,wheel1pos);
-    wheel2 = new SwerveModule(kDrive.DRIVE_ID_2, kDrive.TURN_ID_2,kDrive.ENCODER_2, wheel2pos);
-    wheel3 = new SwerveModule(kDrive.DRIVE_ID_3, kDrive.TURN_ID_3,kDrive.ENCODER_3, wheel3pos);
-    wheel4 = new SwerveModule(kDrive.DRIVE_ID_4, kDrive.TURN_ID_4,kDrive.ENCODER_4,wheel4pos);
+    wheel1 = new SwerveModule(kDrive.DRIVE_ID_1, kDrive.TURN_ID_1,kDrive.ENCODER_1,wheel1pos,162.77);
+    wheel2 = new SwerveModule(kDrive.DRIVE_ID_2, kDrive.TURN_ID_2,kDrive.ENCODER_2, wheel2pos,158.20);
+    wheel3 = new SwerveModule(kDrive.DRIVE_ID_3, kDrive.TURN_ID_3,kDrive.ENCODER_3, wheel3pos,42.80);
+    wheel4 = new SwerveModule(kDrive.DRIVE_ID_4, kDrive.TURN_ID_4,kDrive.ENCODER_4,wheel4pos,138.43);
 
     //scale the wheel speeds to be porportional to their distances from the center (in most cases the distances are all the same, so this doesn't affect anything)
     maxLength = Math.max(Math.max(wheel1pos.getNorm(),wheel2pos.getNorm()),Math.max(wheel3pos.getNorm(),wheel4pos.getNorm()));
