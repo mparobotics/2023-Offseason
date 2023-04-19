@@ -89,6 +89,10 @@ public class SwerveDriveBase extends SubsystemBase{
   public void periodic() {
     // This method will be called once per scheduler run
     updateOdometry();
+    wheel1.logInfo("mod 1");
+    wheel1.logInfo("mod 2");
+    wheel1.logInfo("mod 3");
+
   }
 
 

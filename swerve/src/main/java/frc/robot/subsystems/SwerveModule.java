@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.kDrive;
 
 /** Single Swerve Module:
@@ -212,8 +213,14 @@ public class SwerveModule {
         return isInverted;
     }
     
-    
+    public void logInfo(String modName){
+        SmartDashboard.putNumber(modName + " speed", getSpeed());
+        SmartDashboard.putNumber(modName + " direction", getDirection().getDegrees());
+        SmartDashboard.putNumber(modName + " abs. encoder angle", turnAbsoluteEncoder.getAbsolutePosition());
+
+    }
     public double ScaleSpeed(double maxLength){
         return  position.getNorm() / maxLength;
     }
+    
 }
