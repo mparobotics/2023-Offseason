@@ -30,7 +30,7 @@ public class AutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    isBalanced = m_swerveSubsystem.AutoBalance();
+    m_swerveSubsystem.AutoBalance();
     SmartDashboard.putBoolean("Is Balanced?", isBalanced);
   }
 

@@ -57,6 +57,6 @@ public class HighCubeBalance extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(exampleTrajectory.getInitialPose())),
-        swerveControllerCommand, new AutoBalance(m_SwerveSubsystem));
+        new AutoBalance(m_SwerveSubsystem));
   }
 }

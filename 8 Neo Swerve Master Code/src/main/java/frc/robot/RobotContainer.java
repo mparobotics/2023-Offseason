@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.HighCubeBalance;
+import frc.robot.autos.exampleAuto;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -91,6 +92,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new HighCubeBalance(m_SwerveSubsystem);
+    return new exampleAuto(m_SwerveSubsystem);
   }
 }

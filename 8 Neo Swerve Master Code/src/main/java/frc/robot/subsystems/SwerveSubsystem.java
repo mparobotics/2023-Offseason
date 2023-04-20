@@ -118,7 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public boolean AutoBalance(){
-    double roll_error = Math.toDegrees(pigeon.getRoll());//the angle of the robot
+    double roll_error = pigeon.getPitch();//the angle of the robot
     double balance_kp = .0005;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0.0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
@@ -152,6 +152,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
         swerveOdometry.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
+
+    SmartDashboard.putNumber("Pigeon Roll",  pigeon.getPitch());
 
     for (SwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(
