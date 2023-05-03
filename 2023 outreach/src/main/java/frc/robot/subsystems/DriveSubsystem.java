@@ -8,7 +8,7 @@ package frc.robot.subsystems;
 
 
 
-import java.util.function.BooleanSupplier;
+
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
@@ -23,19 +23,19 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
+
 import frc.robot.Constants.DriveConstants;
 
 
 
 public class DriveSubsystem extends SubsystemBase {
-  private RobotContainer m_robotContainer;
+  
   
   //drive base motors
   private final CANSparkMax motorFR = new CANSparkMax(DriveConstants.MOTOR_FR_ID, MotorType.kBrushless);
@@ -334,11 +334,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
   }
   @Override
   public void periodic() {
-    //Automatic gear shifting
-    //the speed of the left motor in RPMs
-    double lvelocity = encoderL.getVelocity();
-    //the speed of the right motor in RPMs
-    double rvelocity = encoderR.getVelocity();
+   
 
     SmartDashboard.putBoolean("HighGear?", inHighGear);
     SmartDashboard.putBoolean("Breaking?", BrakeMode);
@@ -348,24 +344,7 @@ private DoubleSolenoid shiftSolenoid = new DoubleSolenoid(PneumaticsModuleType.R
     SmartDashboard.putNumber("RightEncoder", encoderR.getPosition());
     SmartDashboard.putNumber("Pigeon Roll", pigeon.getRoll());
 
-   
-    //* Automatic gear shifter - automatically shifts into high gear when the robot is driving fast enough and shifts into low gear when the robot slows down */
-    //check if the robot is turning - if the speeds of the left and right motors are different
-    boolean isTurning = Math.abs(lvelocity - rvelocity) < DriveConstants.TURN_THRESHOLD;
-    //check if automatic shifitng is enabling and the robot IS NOT turning
-/*     if(DriveConstants.AUTO_SHIFT_ENABLED){
-      if(!isTurning){
-        //if either motor exceeds the velocity threshold then shift into high gear
-        if(Math.abs(lvelocity) > DriveConstants.UPSHIFT_THRESHOLD || Math.abs(rvelocity) > DriveConstants.UPSHIFT_THRESHOLD){
-          upShift();
-        }
-        //if both motors' speeds are below the downshift threshold then shift down
-        if(Math.abs(lvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD && Math.abs(rvelocity) < DriveConstants.DOWNSHIFT_THRESHOLD){
-          downShift();
-        }
-      } */
-     
-    
+  
   }
   
 }
