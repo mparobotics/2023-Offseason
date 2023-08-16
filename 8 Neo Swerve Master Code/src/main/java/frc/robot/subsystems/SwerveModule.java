@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.CANCoderUtil;
 import frc.lib.CANSparkMaxUtil;
 import frc.lib.OnboardModuleState;
@@ -163,6 +164,8 @@ public class SwerveModule {
         angleMotor.enableVoltageCompensation(Constants.SwerveConstants.voltageComp);
         //burns spark max
         angleMotor.burnFlash();
+
+        Timer.delay(1.0);
         //resets to the cancoder
         resetToAbsolute();
     }
