@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,6 +43,11 @@ public class SwerveSubsystem extends SubsystemBase {
       new SwerveModule(2, Constants.SwerveConstants.Mod2.constants),
       new SwerveModule(3, Constants.SwerveConstants.Mod3.constants)
     };
+        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
+         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
+         */
+      Timer.delay(1.0);
+      resetModulesToAbsolute();
 
     //creates new swerve odometry (odometry is where the robot is on the field)
     swerveOdometry = new SwerveDriveOdometry(Constants.SwerveConstants.swerveKinematics, getYaw(), getPositions());
@@ -146,6 +152,11 @@ public class SwerveSubsystem extends SubsystemBase {
     
   }
 
+  public void resetModulesToAbsolute(){
+    for(SwerveModule mod : mSwerveMods){
+        mod.resetToAbsolute();
+    }
+}
 
 
   @Override

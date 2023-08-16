@@ -62,8 +62,8 @@ public class RobotContainer {
     m_SwerveSubsystem.setDefaultCommand(
       new TeleopSwerve(
           m_SwerveSubsystem,
-          () -> -m_XboxController.getRawAxis(translationAxis),
-          () -> -m_XboxController.getRawAxis(strafeAxis),
+          () -> -m_XboxController.getRawAxis(translationAxis) * .5,
+          () -> -m_XboxController.getRawAxis(strafeAxis) * .5,
           () -> -m_XboxController.getRawAxis(rotationAxis),
           () -> robotCentric.getAsBoolean()));
 
