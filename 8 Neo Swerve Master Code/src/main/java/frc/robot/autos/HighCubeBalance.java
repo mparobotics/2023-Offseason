@@ -26,12 +26,22 @@ public class HighCubeBalance extends SequentialCommandGroup {
             .setKinematics(Constants.SwerveConstants.swerveKinematics);
 
     // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory =
+    Trajectory Trajectory1 =
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(3, 0)),
+            List.of(new Translation2d(2, 0)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            config);
+
+        Trajectory Trajectory2 =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(3, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(2, 0)),
             // End 3 meters straight ahead of where we started, facing forward
             new Pose2d(1.5, 0, new Rotation2d(0)),
             config);
@@ -46,7 +56,7 @@ public class HighCubeBalance extends SequentialCommandGroup {
 
     SwerveControllerCommand swerveControllerCommand =
         new SwerveControllerCommand(
-            exampleTrajectory,
+            Trajectory1,
             m_SwerveSubsystem::getPose,
             Constants.SwerveConstants.swerveKinematics,
             new PIDController(Constants.AutoConstants.kPXController, 0, 0),
@@ -55,8 +65,22 @@ public class HighCubeBalance extends SequentialCommandGroup {
             m_SwerveSubsystem::setModuleStates,
             m_SwerveSubsystem);
 
-    addCommands(
-        new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(exampleTrajectory.getInitialPose())),
-        new AutoBalance(m_SwerveSubsystem));
+        SwerveControllerCommand swerveControllerCommand2 =
+        new SwerveControllerCommand(
+            Trajectory2,
+            m_SwerveSubsystem::getPose,
+            Constants.SwerveConstants.swerveKinematics,
+            new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+            new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+            thetaController,
+            m_SwerveSubsystem::setModuleStates,
+            m_SwerveSubsystem);
+
+        addCommands(
+            new SequentialCommandGroup(new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(Trajectory1.getInitialPose())),
+            swerveControllerCommand, new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(Trajectory2.getInitialPose())),
+            swerveControllerCommand2));
+            new AutoBalance(m_SwerveSubsystem);
+          }
+        
   }
-}

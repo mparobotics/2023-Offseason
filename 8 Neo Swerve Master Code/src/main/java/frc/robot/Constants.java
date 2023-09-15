@@ -100,7 +100,7 @@ public final class Constants {
       public static final int driveMotorID = 1; 
       public static final int angleMotorID = 2; 
       public static final int canCoderID = 9;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(163.3);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(160.78);
     /* Angle Motor PID Values */
       public static final double angleKP = 0.01; //to tune
       public static final double angleKI = 0.0; //to tune
@@ -117,7 +117,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
       public static final int canCoderID = 10;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(158.5);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(149.18);
       /* Angle Motor PID Values */
       public static final double angleKP = 0.01; //to tune
       public static final double angleKI = 0.0; //to tune
@@ -134,7 +134,7 @@ public final class Constants {
       public static final int driveMotorID = 7;
       public static final int angleMotorID = 8;
       public static final int canCoderID = 11;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(42.90);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(43.0);
       /* Angle Motor PID Values */
       public static final double angleKP = 0.01; //to tune
       public static final double angleKI = 0.0; //to tune
@@ -151,7 +151,7 @@ public final class Constants {
       public static final int driveMotorID = 5;
       public static final int angleMotorID = 6;
       public static final int canCoderID = 12 ;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(140.53);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(140.71);
         /* Angle Motor PID Values */
       public static final double angleKP = 0.01; //to tune
       public static final double angleKI = 0.0; //to tune
