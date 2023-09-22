@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.SwerveModuleConstants;
 
@@ -23,7 +24,7 @@ import frc.lib.SwerveModuleConstants;
 public final class Constants {
   public static final class SwerveConstants{
     public static final double inputDeadband = .1;
-    public static final int PIGEON_ID = 17; //tochange
+    public static final int PIGEON_ID = 17; //to change
     public static final boolean invertPigeon = false;
 
     /* Drivetrain Constants */
@@ -156,20 +157,23 @@ public final class Constants {
     public static final boolean angleMotorInvert = false;
     public static final boolean driveMotorInvert = false;
 
-    
-    
-    
-    
 
-    
+  }
 
-    
+  public static final class AutoConstants{
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecond = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //speed
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //acceleration
 
+    public static final double kPXController = 1; 
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
 
-
-
-
-
+    // Constraint for the motion profilied robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+      new TrapezoidProfile.Constraints(
+          kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
 
