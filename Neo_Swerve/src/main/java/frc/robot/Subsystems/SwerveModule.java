@@ -5,7 +5,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoder;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,9 +13,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.lib.config.SwerveModuleConstants;
-import frc.lib.math.OnboardModuleState;
+import edu.wpi.first.networktables.PubSub;
+import frc.lib.Config.SwerveModuleConstants;
+import frc.lib.math.OnboardModuleState; // Libraries I'll do later
 import frc.lib.util.CANCoderUtil;
 import frc.lib.util.CANCoderUtil.CCUsage;
 import frc.lib.util.CANSparkMaxUtil;
@@ -25,14 +27,19 @@ import frc.robot.Robot;
 /** Add your docs here. */
 public class SwerveModule {
     public int moduleNumber;
+    public double m_angleKP;
+    public double m_angleKI;
+    public double m_angleKD;
+    public double m_angleKFF;
     private Rotation2d lastAngle;
     private Rotation2d angleOffset;
-
+    
     private CANSparkMax angleMotor;
-    private CANSparkMax DRIVE_MOTOR_;
+    private CANSparkMax driveMotor;
 
     private RelativeEncoder driveEncoder;
     private RelativeEncoder integratedAngleEncoder;
+
     private CANCoder angleEncoder;
 
     private final SparkMaxPIDController driveController;
@@ -44,6 +51,10 @@ public class SwerveModule {
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
         this.moduleNumber = moduleNumber;
+        this.m_angleKP = moduleConstants.angleKP;
+        this.m_angleKI = moduleConstants.angleKI;
+        this.m_angleKD = moduleConstants.angleKD;
+        this.m_angleKFF = moduleConstants.angleKFF;
         angleOffset = moduleConstants.angleOffset;
         
         /* Angle Encoder Config */
@@ -63,4 +74,20 @@ public class SwerveModule {
         configDriveMotor();
 
         lastAngle = getState().angle;
+    }
+
+    public SwerveModuleState getState(){
+      return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
+    }
+
+    public SwerveModulePosition getPosition(){
+      return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+    }
+
+    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
+      desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
+
+      setAngle(desiredState);
+      setSpeed(desiredState, isOpenLoop);
+    }
 }
