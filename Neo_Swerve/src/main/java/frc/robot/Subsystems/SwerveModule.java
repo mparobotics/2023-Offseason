@@ -17,11 +17,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.PubSub;
 import frc.lib.Config.SwerveModuleConstants;
-import frc.lib.math.OnboardModuleState; // Libraries I'll do later
-import frc.lib.util.CANCoderUtil;
-import frc.lib.util.CANCoderUtil.CCUsage;
-import frc.lib.util.CANSparkMaxUtil;
-import frc.lib.util.CANSparkMaxUtil.Usage;
+import frc.lib.Config.OnboardModuleState; // Libraries I'll do later
+import frc.lib.Config.CANCoderUtil;
+import frc.lib.Config.CANCoderUtil.CANCoderUsage;
+import frc.lib.Config.CANSparkMaxUtil;
+import frc.lib.Config.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Robot;
 /** Add your docs here. */
@@ -89,5 +89,28 @@ public class SwerveModule {
 
       setAngle(desiredState);
       setSpeed(desiredState, isOpenLoop);
+    }
+
+    private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+      if (isOpenLoop) {
+        //when not taking feedback
+        double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.maxSpeed;
+        driveMotor.set(percentOutput);
+      } 
+      else {
+        driveController.setReference(
+          desiredState.speedMetersPerSecond, 
+          ControlType.kVelocity,
+          0,
+          feedforward.calculate(desiredState.speedMetersPerSecond));
+      }
+    }
+
+    private void setAngle(SwerveModuleState desiredState) {
+      //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+      Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.maxSpeed * 0.01)) ? lastAngle : desiredState.angle;
+
+      angleController.setReference(angle.getDegrees(), ControlType.kPosition);
+      lastAngle = angle;
     }
 }
