@@ -17,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.PubSub;
 import frc.lib.Config.SwerveModuleConstants;
-import frc.lib.Config.OnboardModuleState; // Libraries I'll do later
+import frc.lib.Config.OnboardModuleState;
 import frc.lib.Config.CANCoderUtil;
 import frc.lib.Config.CANCoderUtil.CANCoderUsage;
 import frc.lib.Config.CANSparkMaxUtil;
@@ -112,5 +112,21 @@ public class SwerveModule {
 
       angleController.setReference(angle.getDegrees(), ControlType.kPosition);
       lastAngle = angle;
+    }
+
+
+    private void resetToAbsolute() {
+      double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
+      integratedAngleEncoder.setPosition(absolutePosition);
+    }
+
+    public Rotation2d getCanCoder() {
+      return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+    }
+
+    private void configAngleEncoder() {
+      angleEncoder.configFactoryDefault();
+      CANCoderUtil.setCANCoderBusUsage(angleEncoder, CANCoderUsage.kMinimal);
+      angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
     }
 }
