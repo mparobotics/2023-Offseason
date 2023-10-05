@@ -89,6 +89,20 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
   }
 
+  public void setWheelsToX() {
+    setModuleStates(new SwerveModuleState[] {
+      // front left
+      new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
+      // front right
+      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
+      // back left
+      new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0)),
+      // back right
+      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0))
+    });
+  }
+
+
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (SwerveModule mod : mSwerveMods) {
@@ -119,7 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public boolean AutoBalance(){
     double roll_error = pigeon.getPitch();//the angle of the robot
-    double balance_kp = .0005;//Variable muliplied by roll_error
+    double balance_kp = -.005;//Variable muliplied by roll_error
     double position_adjust = 0.0;
     double min_command = 0.0;//adds a minimum input to the motors to overcome friction if the position adjust isn't enough
     if (roll_error > 6.0)

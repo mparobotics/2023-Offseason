@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
+import frc.robot.commands.AutoBalance;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.util.List;
-import frc.robot.commands.AutoBalance;
 
-public class HighCubeBalance extends SequentialCommandGroup {
-  public HighCubeBalance(SwerveSubsystem m_SwerveSubsystem) {
+public class WorkingHighCubeBalance extends SequentialCommandGroup {
+  public WorkingHighCubeBalance(SwerveSubsystem m_SwerveSubsystem) {
     TrajectoryConfig config =
         new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -27,34 +27,32 @@ public class HighCubeBalance extends SequentialCommandGroup {
 
     TrajectoryConfig configReverse =
         new TrajectoryConfig(
-                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            .setKinematics(Constants.SwerveConstants.swerveKinematics);
+            Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+            Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        .setKinematics(Constants.SwerveConstants.swerveKinematics);
+
     configReverse.setReversed(true);
-
-
     // An example trajectory to follow.  All units in meters.
-    Trajectory trajectoryOne =
+    Trajectory Trajectory1 =
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these  interior waypoints
-            List.of(new Translation2d(-1.5, 0)), 
-            // End 1.5 meters straight ahead of where we started, facing forward
-            new Pose2d(-6, 0, new Rotation2d(0)),
-            configReverse);
-
-    Trajectory trajectoryTwo =
-        TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(-6, 0, new Rotation2d(0)),
-            // Pass through these  interior waypoints
-            List.of(new Translation2d(-5, 0)), 
-            // End 1.5 meters straight ahead of where we started, facing forward
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-2, 0)),
+            // End 3 meters straight ahead of where we started, facing forward
             new Pose2d(-3, 0, new Rotation2d(0)),
             config);
 
-    var concatTraj = trajectoryOne.concatenate(trajectoryTwo);
+        Trajectory Trajectory2 =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(-3, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(-2, 0)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(-1.5, 0, new Rotation2d(0)),
+            configReverse);
+    var concatTraj = Trajectory1.concatenate(Trajectory2);
 
     var thetaController =
         new ProfiledPIDController(
@@ -75,10 +73,11 @@ public class HighCubeBalance extends SequentialCommandGroup {
             m_SwerveSubsystem::setModuleStates,
             m_SwerveSubsystem);
 
-    addCommands(
-        new SequentialCommandGroup(
-            new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(concatTraj.getInitialPose())),
-                swerveControllerCommand),
+
+        addCommands(
+            new SequentialCommandGroup(new InstantCommand(() -> m_SwerveSubsystem.resetOdometry(Trajectory1.getInitialPose())),
+            swerveControllerCommand),
             new AutoBalance(m_SwerveSubsystem));
+          }
+        
   }
-}
