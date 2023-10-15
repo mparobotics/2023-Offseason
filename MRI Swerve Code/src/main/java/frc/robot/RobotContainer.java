@@ -37,6 +37,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_XboxController = new CommandXboxController(0);
+  private CommandJoystick m_Helms = new CommandJoystick(1);
   //private final CommandJoystick m_JoystickL = new CommandJoystick(0);
   //private final CommandJoystick m_JoystickR = new CommandJoystick(1);
 
@@ -46,7 +47,7 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
   
   private final Trigger robotCentric =
-  new Trigger(m_XboxController.leftBumper());
+  new Trigger(m_XboxController.button(Button.kLeftBumper.value));
 
 
   /*private final int translationAxis = Joystick.AxisType.kY.value; //left flight stick
@@ -86,8 +87,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_XboxController.button(Button.kY.value).onTrue(new InstantCommand(() -> m_SwerveSubsystem.zeroGyro()));
-    m_XboxController.button(Button.kB.value).whileTrue(new Intake(m_IntakeSubsystem, IntakeConstants.INTAKE_SPEED));
-    m_XboxController.button(Button.kA.value).whileTrue(new Intake(m_IntakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    m_Helms.button(7).whileTrue(new Intake(m_IntakeSubsystem, IntakeConstants.INTAKE_SPEED));
+    m_Helms.button(8).whileTrue(new Intake(m_IntakeSubsystem, IntakeConstants.OUTTAKE_SPEED));
+    m_XboxController.button(Button.kX.value).onTrue(new InstantCommand(() -> m_SwerveSubsystem.xLock()));
   }
 
   /**
@@ -97,7 +99,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new exampleAuto(m_SwerveSubsystem);
+    return new HighCubeBalance(m_SwerveSubsystem);
   }
 
 

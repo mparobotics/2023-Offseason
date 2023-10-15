@@ -80,6 +80,14 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+    public void setModuleStatesStopped(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
+
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredStateStopped(desiredStates[mod.moduleNumber], false);
+    }
+  }
+
 
   public Pose2d getPose() {
     return swerveOdometry.getPoseMeters();
@@ -145,6 +153,17 @@ public class SwerveSubsystem extends SubsystemBase {
       return true;}
     
   }
+
+  public void xLock()
+  {
+      SwerveModuleState[] moduleStates = new SwerveModuleState[4] ;
+      moduleStates[0] = new SwerveModuleState(0,Rotation2d.fromDegrees(315));
+      moduleStates[1] = new SwerveModuleState(0,Rotation2d.fromDegrees(45));
+      moduleStates[2] = new SwerveModuleState(0,Rotation2d.fromDegrees(225));
+      moduleStates[3] = new SwerveModuleState(0,Rotation2d.fromDegrees(135));
+      setModuleStatesStopped(moduleStates);
+  }
+
 
 
 
