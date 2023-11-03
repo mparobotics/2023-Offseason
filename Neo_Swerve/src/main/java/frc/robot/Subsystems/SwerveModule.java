@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.PubSub;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.Config.SwerveModuleConstants;
 import frc.lib.Config.OnboardModuleState;
 import frc.lib.Config.CANCoderUtil;
@@ -127,6 +128,37 @@ public class SwerveModule {
     private void configAngleEncoder() {
       angleEncoder.configFactoryDefault();
       CANCoderUtil.setCANCoderBusUsage(angleEncoder, CANCoderUsage.kMinimal);
-      angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
+      angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfiguration);
+    }
+
+    private void configAngleMotor(){
+      angleMotor.restoreFactoryDefaults(); //resets the motor
+      CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly); //limits can bus usage
+      angleMotor.setSmartCurrentLimit(Constants.SwerveConstants.angleContinuousCurrentLimit); //limits current
+      angleMotor.setInverted(Constants.SwerveConstants.angleInvert); //inverts it if needed
+      angleMotor.setIdleMode(Constants.SwerveConstants.angleNeutralMode); //brakes
+      integratedAngleEncoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor); 
+      //sets a conversion factor for the encoder so it output correlates with the rotation of the module
+
+      //PID
+      angleController.setP(m_angleKP);
+      angleController.setI(m_angleKI);
+      angleController.setD(m_angleKD);
+      angleController.setFF(m_angleKFF);
+      angleMotor.enableVoltageCompensation(Constants.SwerveConstants.voltageComp);
+      angleMotor.burnFlash();  //BURN THE SPARK MAX
+
+      Timer.delay(1.0);
+      resetToAbsolute();// reset
+    }
+
+    private void configDriveMotor(){
+      driveMotor.restoreFactoryDefaults(); //resets the motor
+      CANSparkMaxUtil.setCANSparkMaxBusUsage(driveMotor, Usage.kAll); //UNLIMITED CAN BUS USAGE
+      driveMotor.setSmartCurrentLimit(Constants.SwerveConstants.driveContinuousCurrentLimit); //limits current
+      driveMotor.setInverted(Constants.SwerveConstants.driveInvert); //inverts it if needed
+      driveMotor.setIdleMode(Constants.SwerveConstants.driveNeutralMode); //brakes
+     
+
     }
 }
