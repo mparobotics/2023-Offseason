@@ -38,13 +38,14 @@ public class DriveSubsystem extends SubsystemBase {
   /** Drive the robot with an input for drive speed and turning speed. Both range from -1 to 1*/
   public void ArcadeDrive(double driveSpeed,double turnSpeed){
     
-    //if joystick inputs are really small, prentend they are 0 to avoid jitter/drifting (deadbanding)
+    turnSpeed *= -1;
+    //if joystick inputs are really small, pretend they are 0 to avoid jitter/drifting (deadbanding)
     if(Math.abs(driveSpeed) < 0.1){ driveSpeed = 0;}
     if(Math.abs(turnSpeed) < 0.1){ turnSpeed = 0;}
 
     /* scale the speed by 0.5, so full speed on the joystick equals 50% driving speed */
-    driveSpeed *= 0.5;
-    turnSpeed *= 0.5;
+    driveSpeed *= 1;
+    turnSpeed *= 1;
     
     //drive at the desired speed
     drivebase.arcadeDrive(driveSpeed,turnSpeed);
