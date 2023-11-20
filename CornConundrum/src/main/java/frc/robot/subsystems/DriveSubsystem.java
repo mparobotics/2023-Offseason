@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -74,5 +75,20 @@ public class DriveSubsystem extends SubsystemBase {
     turnSpeed *= 0.6;
     //drive at the desired speed
     drivebase.arcadeDrive(driveSpeed,turnSpeed);
+
+    }
+
+    public CommandBase encoderResetCommand() {
+      return runOnce(
+        () -> {
+        Motor_BL.setSelectedSensorPosition(0);
+        });
+    }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Back Left Encoder", Motor_BL.getSelectedSensorPosition());
   }
+
 }

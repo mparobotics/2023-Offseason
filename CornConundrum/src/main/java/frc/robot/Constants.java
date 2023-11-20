@@ -17,7 +17,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class PneumaticsConstants{
-    public static final int FORWARD_PORT = 0;
-    public static final int REVERSE_PORT = 0;
+    public static final int FORWARD_PORT = 7;
+    public static final int REVERSE_PORT = 6;
   }
 }
