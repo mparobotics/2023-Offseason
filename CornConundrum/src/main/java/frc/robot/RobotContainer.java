@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
+
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,6 +19,7 @@ public class RobotContainer {
 
   //a DriveSubsystem controls the 4 driving motors
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  
 
 
   //An xbox controller is used to control the robot
@@ -36,6 +39,12 @@ public class RobotContainer {
     //Drive the robot. Left joystick up/down position controls speed, right joystick left/right postition controls turning
     m_driveSubsystem.ArcadeDrive(xbox.getLeftY(),xbox.getRightX()), m_driveSubsystem
     ));
+   
+    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
+    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.setColor(255,0,0));
+    xbox.button(Button.kX.value).onTrue(m_driveSubsystem.setColor(0,0,255));
+    xbox.button(Button.kY.value).onTrue(m_driveSubsystem.setColor(255,180,0));
+
   }
 
   
