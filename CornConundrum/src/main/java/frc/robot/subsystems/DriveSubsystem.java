@@ -49,9 +49,10 @@ public class DriveSubsystem extends SubsystemBase {
   public CommandBase setColor(int r, int g, int b){
     return runOnce(() -> {ledr = r; ledg = g; ledb = b;});
   }
+
   /** Drive the robot with an input for drive speed and turning speed. Both range from -1 to 1*/
   public void ArcadeDrive(double driveSpeed,double turnSpeed){
-    
+  
     
     turnSpeed *= -1;
     driveSpeed *= -1;
@@ -60,6 +61,11 @@ public class DriveSubsystem extends SubsystemBase {
     int count = (int) (Math.abs(limitedInput) * 60);
     leds.setLEDs(0,0,0);
     leds.setLEDs(ledr,ledg,ledb,0,0,8);
+
+    ledr *= driveSpeed; //expiremental code. I'm trying to make the brigtness change based off of speed
+    ledg *= driveSpeed;
+    ledb *= driveSpeed;
+
     if(limitedInput > 0){
       leds.setLEDs(0,255,0,0,8,count);
     }

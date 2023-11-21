@@ -48,12 +48,12 @@ public class RobotContainer {
     m_driveSubsystem.ArcadeDrive(xbox.getLeftY(),xbox.getRightX()), m_driveSubsystem
     ));
    
-    //xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
-    //xbox.button(Button.kB.value).onTrue(m_driveSubsystem.setColor(255,0,0));
-    //xbox.button(Button.kX.value).onTrue(m_driveSubsystem.setColor(0,0,255));
+    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
+    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.setColor(255,0,0));
+    xbox.button(Button.kX.value).onTrue(m_driveSubsystem.setColor(0,0,255));
     //xbox.button(Button.kY.value).onTrue(m_driveSubsystem.setColor(255,180,0));
 
-    xbox.button(Button.kA.value).onTrue(m_pneumaticsSubsystem.toggle()); 
+    xbox.button(Button.kY.value).onTrue(m_pneumaticsSubsystem.toggle()); 
 
   }
 
