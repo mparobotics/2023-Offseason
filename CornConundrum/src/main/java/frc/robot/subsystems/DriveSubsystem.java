@@ -27,13 +27,13 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   // A DriveSubsystem has 4 WPI_TalonSRX motor controllers 
-  private final WPI_TalonSRX Motor_FL = new WPI_TalonSRX(9);
-  private final WPI_TalonSRX Motor_FR = new WPI_TalonSRX(8);
-  private final WPI_TalonSRX Motor_BL = new WPI_TalonSRX(3);
-  private final WPI_TalonSRX Motor_BR = new WPI_TalonSRX(7);
+  private final WPI_TalonSRX MotorBR = new WPI_TalonSRX(9);
+  private final WPI_TalonSRX MotorBL = new WPI_TalonSRX(8);
+  private final WPI_TalonSRX MotorFR = new WPI_TalonSRX(3);
+  private final WPI_TalonSRX MotorFL = new WPI_TalonSRX(7);
   
   // A DifferentialDrive controls the front left and front right motors in a tank drive format
-  private final DifferentialDrive drivebase = new DifferentialDrive(Motor_FR, Motor_FL);
+  private final DifferentialDrive drivebase = new DifferentialDrive(MotorBL, MotorBR);
 
   //A Pigeon2 IMU for turning in auto
   private final WPI_Pigeon2 gyro = new WPI_Pigeon2(17);
@@ -56,12 +56,12 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem */
   public DriveSubsystem() {
     // the right motors are inverted, so positive speeds correspond to driving forward on both sides 
-    Motor_FR.setInverted(true);
-    Motor_BR.setInverted(true);
+    MotorBL.setInverted(true);
+    MotorFL.setInverted(true);
 
     //the back left and right motors follow identical motions to their corresponding front motor
-    Motor_BL.follow(Motor_FL);
-    Motor_BR.follow(Motor_FR);
+    MotorBR.follow(MotorFR);
+    MotorBL.follow(MotorFL);
   }
   
 
@@ -70,8 +70,8 @@ public class DriveSubsystem extends SubsystemBase {
   public void ArcadeDrive(double driveSpeed,double turnSpeed){
     
     //the "front" block on our drivebase is actually in the back of the robot, so invert controller inputs
-    turnSpeed *= -1;
-    driveSpeed *= -1;
+    //turnSpeed *= -1;
+    //driveSpeed *= -1;
 
 
 
@@ -119,11 +119,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Get the distance traveled in meters measured by the encoder. */
   public double getEncoderPosition(){
-    return Motor_BR.getSelectedSensorPosition() * DriveConstants.ENCODER_TO_METERS;
+    return MotorFL.getSelectedSensorPosition() * DriveConstants.ENCODER_TO_METERS;
   }
   /** set the encoder position to a position in meters */
   public void setEncoderPosition(double position){
-    Motor_BR.setSelectedSensorPosition(position / DriveConstants.ENCODER_TO_METERS);
+    MotorFL.setSelectedSensorPosition(position / DriveConstants.ENCODER_TO_METERS);
   }
   /** Get the direction of the robot in degrees from the Pigeon2 */
   public double getAngle(){
@@ -143,8 +143,8 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic(){
     //diplay encoder and gyro values to SmartDashboard
-    SmartDashboard.putNumber("Raw Encoder Distance", Motor_BR.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Encoder Distance", Motor_BR.getSelectedSensorPosition() * DriveConstants.ENCODER_TO_METERS);
+    SmartDashboard.putNumber("Raw Encoder Distance", MotorFL.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Encoder Distance", MotorFL.getSelectedSensorPosition() * DriveConstants.ENCODER_TO_METERS);
 
     SmartDashboard.putNumber("Direction", gyro.getAngle());
   }

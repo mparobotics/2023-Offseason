@@ -19,9 +19,9 @@ public class DriveForwardMeters extends CommandBase {
   private double target;
   
   //P (porportional) constant for driving to a target
-  private double kP = 2;
-  //maximum motor speed is 70%
-  private double maxSpeed = 0.7;
+  private double kP = 3;
+  //maximum motor speed is 60%
+  private double maxSpeed = 0.6;
 
   /** Creates a new DriveForward command.
    * @param setpoint - the distance to drive in meters 
@@ -49,11 +49,14 @@ public class DriveForwardMeters extends CommandBase {
     /*the distance to the target. 
     Positive if target position is greater than current position, negative if target position is less than current position*/
     double distance = (target - m_driveSubsystem.getEncoderPosition());
-    SmartDashboard.putNumber("target position", target);
-    SmartDashboard.putNumber("distance to target", distance);
-    
     //the speed is porportional to the distance from the target
     double speed = -kP * distance;
+    SmartDashboard.putNumber("target position", target);
+    SmartDashboard.putNumber("distance to target", distance);
+    SmartDashboard.putNumber("output speed", speed);
+
+    
+    
 
     //if the speed is greater than maxSpeed, then cap it at the maxSpeed
     speed = Math.min(maxSpeed, Math.max(-maxSpeed, speed));
