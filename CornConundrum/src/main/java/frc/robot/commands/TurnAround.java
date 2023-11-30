@@ -10,13 +10,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnAround  extends CommandBase {
-  /** Creates a new TurnAround . */
+  
   private DriveSubsystem m_driveSubsystem;
-  private double target;
 
+  private double target;
   private double kP = 2;
   private double maxSpeed = 0.5;
 
+  /** Turn the robot 180 degrees by only driving the right wheels. Makes it turn in an arc.
+   *  NOT TESTED!
+   */
   public TurnAround (DriveSubsystem ds) {
     addRequirements(ds);
     m_driveSubsystem = ds;
