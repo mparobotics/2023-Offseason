@@ -16,4 +16,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class DriveConstants{
+    public static final double ENCODER_VALUE_TO_ROTATIONS = -1.0 / 4096;
+    public static final double ROTATIONS_TO_METERS = 0.1524 * Math.PI;
+    public static final double ENCODER_TO_METERS = ENCODER_VALUE_TO_ROTATIONS * ROTATIONS_TO_METERS;
+  }
 }

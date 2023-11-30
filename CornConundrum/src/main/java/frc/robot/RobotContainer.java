@@ -5,10 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.DriveForwardMeters;
+import frc.robot.commands.TurnAround;
+import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -20,10 +23,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController xbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -41,14 +44,19 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+  //decide what events trigger what commands
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    //Set DriveSubsystem to be always driving by default
+    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> 
+    //Drive the robot. Left joystick up/down position controls speed, right joystick left/right postition controls turning
+    m_driveSubsystem.ArcadeDrive(xbox.getLeftY(),xbox.getRightX()), m_driveSubsystem
+    ));
+   
+    xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
+    xbox.button(Button.kB.value).onTrue(m_driveSubsystem.setColor(255,0,0));
+    xbox.button(Button.kX.value).onTrue(m_driveSubsystem.setColor(0,0,255));
+    xbox.button(Button.kY.value).onTrue(m_driveSubsystem.setColor(255,180,0));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -57,7 +65,16 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    
+    //Leave the barn and push a spoiled cobb back into the barn
+    return new SequentialCommandGroup(
+    //drive forward
+    new DriveForwardMeters(1, m_driveSubsystem),
+    //turn around in an arc
+    new TurnAround(m_driveSubsystem),
+    //drive back, now 
+    new DriveForwardMeters(0, m_driveSubsystem));
+
+
   }
 }
