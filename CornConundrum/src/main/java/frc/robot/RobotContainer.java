@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveForwardMeters;
 import frc.robot.commands.TurnAround;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final PneumaticsSubsystem m_pneumatics = new PneumaticsSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController xbox =
@@ -52,11 +54,16 @@ public class RobotContainer {
     m_driveSubsystem.ArcadeDrive(xbox.getLeftY(),xbox.getRightX()), m_driveSubsystem
     ));
    
+    
+    //Left trigger dumps cargo
+    new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onTrue(m_pneumatics.in());
+    new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onFalse(m_pneumatics.out());
+
+    //A,B,X,and Y buttons set the LED colors to green, red, blue, and yellow.
     xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
     xbox.button(Button.kB.value).onTrue(m_driveSubsystem.setColor(255,0,0));
     xbox.button(Button.kX.value).onTrue(m_driveSubsystem.setColor(0,0,255));
     xbox.button(Button.kY.value).onTrue(m_driveSubsystem.setColor(255,180,0));
-
   }
 
   /**
