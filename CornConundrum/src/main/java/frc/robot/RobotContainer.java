@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  //private final PneumaticsSubsystem m_pneumatics = new PneumaticsSubsystem();
+  private final PneumaticsSubsystem m_pneumatics = new PneumaticsSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController xbox =
@@ -79,8 +79,8 @@ public class RobotContainer {
    
     
     //Left trigger dumps cargo
-    //new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onTrue(m_pneumatics.in());
-    //new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onFalse(m_pneumatics.out());
+    new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onTrue(m_pneumatics.in());
+    new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onFalse(m_pneumatics.out());
 
     //A,B,X,and Y buttons set the LED colors to green, red, blue, and yellow.
     xbox.button(Button.kA.value).onTrue(m_driveSubsystem.setColor(0,255,0));
