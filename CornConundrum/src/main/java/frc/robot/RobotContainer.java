@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,6 +35,8 @@ public class RobotContainer {
   private final CommandXboxController xbox =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  private final Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+
   enum AutoChoices{
     NOTHING, LEAVE_BARN, SPOILED_COBB_L, SPOILED_COBB_R
   }
@@ -41,6 +45,8 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    phCompressor.enableDigital();
   
     auto_selector.setDefaultOption("Do Nothing", AutoChoices.NOTHING);
     auto_selector.addOption("Leave Barn", AutoChoices.LEAVE_BARN);
@@ -78,7 +84,7 @@ public class RobotContainer {
     ));
    
     
-    //Left trigger dumps cargo
+    //Right trigger dumps cargo
     new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onTrue(m_pneumatics.in());
     new Trigger(() -> (xbox.getRightTriggerAxis() > 0.5)).onFalse(m_pneumatics.out());
 
